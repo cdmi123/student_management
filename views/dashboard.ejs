@@ -1,0 +1,68 @@
+<%- include('layout/header') %>
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-3">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+        <!-- Total Students Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card dashboard-card bg-gradient-primary">
+                <div class="card-body">
+                    <div class="card-title-sm">Total Students</div>
+                    <div class="card-value"><%= typeof totalStudents !=='undefined' ? totalStudents : 0 %></div>
+                    <i class="fas fa-users card-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Courses Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card dashboard-card bg-gradient-success">
+                <div class="card-body">
+                    <div class="card-title-sm">Total Courses</div>
+                    <div class="card-value"><%= typeof totalCourses !=='undefined' ? totalCourses : 0 %></div>
+                    <i class="fas fa-book-open card-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Fees Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card dashboard-card bg-gradient-info">
+                <div class="card-body">
+                    <div class="card-title-sm">Total Fees</div>
+                    <div class="card-value">₹<%= typeof totalFees !=='undefined' ? totalFees.toLocaleString('en-IN') : 0 %></div>
+                    <i class="fas fa-rupee-sign card-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collected Fees Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card dashboard-card bg-gradient-warning">
+                <div class="card-body">
+                    <div class="card-title-sm text-dark">Collected Fees</div>
+                    <div class="card-value text-dark">₹<%= typeof collectedFees !=='undefined' ? collectedFees.toLocaleString('en-IN') : 0 %></div>
+                    <i class="fas fa-wallet card-icon text-dark"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Pending Fees Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card dashboard-card bg-gradient-danger">
+                <div class="card-body">
+                    <div class="card-title-sm">Pending Fees</div>
+                    <div class="card-value">₹<%= typeof pendingFees !=='undefined' ? pendingFees.toLocaleString('en-IN') : 0 %></div>
+                    <i class="fas fa-clock card-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('layout/footer') %>

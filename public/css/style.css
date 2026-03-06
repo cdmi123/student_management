@@ -1,0 +1,404 @@
+/* Custom Theme Colors */
+:root {
+    --primary-color: #0d6efd;
+    --primary-hover: #0b5ed7;
+    --sidebar-bg: #343a40;
+    /* Dark Sidebar */
+    --sidebar-text: #ced4da;
+    --sidebar-active-bg: #0d6efd;
+    --sidebar-active-text: #ffffff;
+    --body-bg: #f4f6f9;
+    --header-bg: #ffffff;
+    --secondary-nav-bg: #f8f9fa;
+    --card-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+}
+
+body {
+    background-color: var(--body-bg);
+    font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow-x: hidden;
+    color: #444;
+}
+
+/* Wrapper and Layout */
+#wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+/* Sidebar Styles */
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    min-height: 100vh;
+    transition: all 0.3s;
+    z-index: 1000;
+}
+
+#sidebar .sidebar-header {
+    padding: 15px 20px;
+    background: #2b3035;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+}
+
+#sidebar .sidebar-header img {
+    width: 30px;
+    margin-right: 10px;
+}
+
+
+#sidebar ul.components {
+    padding: 10px 0;
+}
+
+#sidebar ul li a {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    /* Standardized size */
+    display: flex;
+    align-items: center;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    /* Removed 'all' to avoid font rendering shifts */
+    font-weight: 500;
+}
+
+#sidebar ul li a i {
+    width: 20px;
+    margin-right: 12px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+#sidebar ul li a .chevron {
+    margin-left: auto;
+    font-size: 0.75rem;
+    transition: transform 0.3s ease;
+}
+
+#sidebar ul li a[aria-expanded="true"] .chevron {
+    transform: rotate(-90deg);
+}
+
+.img-profile {
+    object-fit: cover;
+}
+
+#sidebar .collapse {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+#sidebar .collapse li a {
+    padding: 10px 20px 10px 52px;
+    font-size: 0.88rem;
+    /* Slightly smaller for hierarchy but stable */
+    color: #adb5bd;
+    border-left: 3px solid transparent;
+    font-weight: 400;
+}
+
+#sidebar .collapse li a:hover,
+#sidebar .collapse li a.active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    border-left-color: var(--primary-color);
+}
+
+#sidebar ul li.active>a {
+    color: var(--sidebar-active-text);
+    background: var(--sidebar-active-bg);
+    font-weight: 600;
+}
+
+/* Toggle Sidebar */
+#sidebar.active {
+    margin-left: -250px;
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+
+    #sidebar.active {
+        margin-left: 0;
+    }
+}
+
+/* Content Area */
+#content {
+    flex-grow: 1;
+    transition: all 0.3s;
+    background: var(--body-bg);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header & Topbar */
+.topbar {
+    background: var(--header-bg);
+    padding: 0 1rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #dee2e6;
+}
+
+
+/* Form Styles */
+.form-header-bar {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-header-bar h5 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.tab-container {
+    background: #fff;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.nav-tabs-custom {
+    border-bottom: none;
+    padding: 0 20px;
+}
+
+.nav-tabs-custom .nav-link {
+    border: none;
+    color: #6c757d;
+    padding: 15px 20px;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+}
+
+.nav-tabs-custom .nav-link:hover {
+    color: var(--primary-color);
+}
+
+.nav-tabs-custom .nav-link.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+    background: transparent;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card .card-body {
+    padding: 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.dashboard-card .card-icon {
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    font-size: 5rem;
+    opacity: 0.1;
+    z-index: 1;
+    transition: transform 0.3s;
+}
+
+.dashboard-card:hover .card-icon {
+    transform: scale(1.1) rotate(-10deg);
+}
+
+.card-title-sm {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.card-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+/* Gradient Variants */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%) !important;
+    color: #fff !important;
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, #198754 0%, #0b5131 100%) !important;
+    color: #fff !important;
+}
+
+.bg-gradient-info {
+    background: linear-gradient(135deg, #0dcaf0 0%, #087990 100%) !important;
+    color: #fff !important;
+}
+
+.bg-gradient-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%) !important;
+    color: #212529 !important;
+}
+
+.bg-gradient-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #8b101c 100%) !important;
+    color: #fff !important;
+}
+
+/* Utilities */
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+}
+
+.shadow {
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175) !important;
+}
+
+.rounded-lg {
+    border-radius: 0.75rem !important;
+}
+
+.fw-bold {
+    font-weight: 700 !important;
+}
+
+.fw-extrabold {
+    font-weight: 800 !important;
+}
+
+/* Login Page Styling */
+.login-bg {
+    background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    overflow: hidden;
+}
+
+.login-brand-side {
+    background: var(--primary-color);
+    color: #fff;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.login-form-side {
+    padding: 50px 40px;
+}
+
+.form-content-area {
+    background: #fff;
+    padding: 25px;
+    border: 1px solid #dee2e6;
+    border-top: none;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    color: #495057;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 10px 12px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+}
+
+.image-upload-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    border: 2px dashed transparent;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.image-upload-box.drag-over {
+    border-color: var(--primary-color);
+    background-color: rgba(13, 110, 253, 0.05);
+    transform: scale(1.02);
+}
+
+.image-upload-box .btn-upload {
+    background: #f8f9fa;
+    border: 1px solid #ced4da;
+    color: #495057;
+}
+
+/* Utility */
+.text-primary-theme {
+    color: var(--primary-color) !important;
+}
+
+.btn-primary-theme {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.btn-primary-theme:hover {
+    background-color: var(--primary-hover);
+    color: #fff;
+}

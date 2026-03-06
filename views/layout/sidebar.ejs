@@ -1,0 +1,64 @@
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <img src="https://ui-avatars.com/api/?name=C&background=0d6efd&color=fff&rounded=true" alt="Logo">
+        <h5 class="text-white mb-0 fw-bold">CDMI</h5>
+    </div>
+    <ul class="list-unstyled components">
+        <li class="nav-item">
+            <a href="/" class="nav-link">
+                <i class="fas fa-th-large"></i>
+                Dashboard
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="#studentSubmenu" data-bs-toggle="collapse" aria-expanded="false"
+                class="nav-link dropdown-toggle-custom">
+                <i class="fas fa-graduation-cap"></i>
+                IT/Multimedia
+                <i class="fas fa-chevron-left chevron"></i>
+            </a>
+            <ul class="collapse list-unstyled ps-4" id="studentSubmenu">
+                <li><a href="/student/add">Add Student</a></li>
+                <li><a href="/student/list">Student List</a></li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a href="#feesSubmenu" data-bs-toggle="collapse" aria-expanded="false"
+                class="nav-link dropdown-toggle-custom">
+                <i class="fas fa-money-bill-wave"></i>
+                Multimedia Fees
+                <i class="fas fa-chevron-left chevron"></i>
+            </a>
+            <ul class="collapse list-unstyled ps-4" id="feesSubmenu">
+                <li><a href="/student/installments">Installment Report</a></li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a href="#courseSubmenu" data-bs-toggle="collapse" aria-expanded="false"
+                class="nav-link dropdown-toggle-custom">
+                <i class="fas fa-users"></i>
+                Manage Courses
+                <i class="fas fa-chevron-left chevron"></i>
+            </a>
+            <ul class="collapse list-unstyled ps-4" id="courseSubmenu">
+                <li><a href="/course/add">Add Course</a></li>
+                <li><a href="/course/list">Course List</a></li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a href="#staffSubmenu" data-bs-toggle="collapse" aria-expanded="false"
+                class="nav-link dropdown-toggle-custom">
+                <i class="fas fa-user-tie"></i>
+                Manage Staff
+                <i class="fas fa-chevron-left chevron"></i>
+            </a>
+            <ul class="collapse list-unstyled ps-4" id="staffSubmenu">
+                <li><a href="#">Staff List</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>

@@ -1,0 +1,94 @@
+<%- include('../layout/header') %>
+
+    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-3">
+        <h1 class="h3 mb-0 text-gray-800">Installment Report</h1>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary-theme">Student Installment Details</h6>
+        </div>
+        <div class="card-body">
+            <div class="accordion" id="installmentAccordion">
+                <% if(students && students.length> 0) { %>
+                    <% students.forEach((student, index)=> { %>
+                        <div class="accordion-item mb-2 border-0 shadow-sm rounded">
+                            <h2 class="accordion-header" id="heading<%= index %>">
+                                <button class="accordion-button <%= index === 0 ? '' : 'collapsed' %> bg-light"
+                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= index %>"
+                                    aria-expanded="<%= index === 0 ? 'true' : 'false' %>"
+                                    aria-controls="collapse<%= index %>">
+                                    <strong>
+                                        <%= student.studentName %>
+                                            <%= student.surname %>
+                                    </strong>
+                                    <span class="badge bg-secondary ms-3">
+                                        <%= student.courseId ? student.courseId.courseName : 'N/A' %>
+                                    </span>
+                                    <% let totalPaid=0; student.installments.forEach(i=> totalPaid += i.amount);
+                                        let due = student.totalFees - totalPaid;
+                                        %>
+                                        <span class="badge bg-success ms-auto me-2">Paid: ₹<%= totalPaid %></span>
+                                        <span class="badge bg-danger">Due: ₹<%= due %></span>
+                                </button>
+                            </h2>
+                            <div id="collapse<%= index %>"
+                                class="accordion-collapse collapse <%= index === 0 ? 'show' : '' %>"
+                                aria-labelledby="heading<%= index %>" data-bs-parent="#installmentAccordion">
+                                <div class="accordion-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered mt-2">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Installment No.</th>
+                                                    <th>Amount (₹)</th>
+                                                    <th>Date</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% student.installments.forEach((inst, iIndex)=> { %>
+                                                    <% const today=new Date(); const instDate=new Date(inst.date); let
+                                                        status="Pending" ; let badgeClass="bg-warning text-dark" ;
+                                                        if(instDate < today) { status="Paid" ; badgeClass="bg-success" ;
+                                                        } %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= iIndex + 1 %>
+                                                            </td>
+                                                            <td class="fw-bold">₹<%= inst.amount.toLocaleString('en-IN')
+                                                                    %>
+                                                            </td>
+                                                            <td>
+                                                                <%= new Date(inst.date).toLocaleDateString('en-IN') %>
+                                                            </td>
+                                                            <td><span class="badge <%= badgeClass %>">
+                                                                    <%= status %>
+                                                                </span></td>
+                                                        </tr>
+                                                        <% }) %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <div class="text-center py-4 border rounded bg-light text-muted">No installment records
+                                    found.</div>
+                                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Highlight sidebar active link
+        document.querySelectorAll('#sidebar ul li a').forEach(el => {
+            if (el.getAttribute('href') === '/student/installments') {
+                el.parentElement.classList.add('active');
+            }
+        });
+    </script>
+
+    <%- include('../layout/footer') %>
