@@ -1,99 +1,172 @@
 <%- include('../layout/header') %>
 
-    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-3">
-        <h1 class="h3 mb-0 text-gray-800">Student List</h1>
-        <a href="/student/add" class="btn btn-sm btn-primary-theme shadow-sm"><i
-                class="fas fa-plus fa-sm text-white-50 mr-2"></i> Register New Student</a>
-    </div>
-
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary-theme">All Registered Students</h6>
+    <div class="row mt-3">
+        <div class="col-12 d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0">Admission List</h4>
+            <a href="/student/add" class="btn btn-primary px-4">
+                <i class="fas fa-plus me-2"></i> Add Admission
+            </a>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Photo</th>
-                            <th>Full Name</th>
-                            <th>Contact</th>
-                            <th>Course</th>
-                            <th>Joining Date</th>
-                            <th>Total Fees</th>
-                            <th>Total Paid</th>
-                            <th>Remaining Fees</th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% if(students && students.length > 0) { %>
-                            <% students.forEach(student => { 
-                                // Calculate paid fees 
-                                let totalPaid = 0; 
-                                if(student.installments && student.installments.length > 0) {
-                                    student.installments.forEach(inst => totalPaid += inst.amount);
-                                }
-                                let remaining = student.totalFees - totalPaid;
-                            %>
-                                    <tr>
-                                        <td class="text-center">
-                                            <% if(student.image) { %>
-                                                <img src="/uploads/<%= student.image %>"
-                                                    alt="<%= student.studentName %>" class="img-profile rounded-circle"
-                                                    style="width:40px; height:40px; object-fit:cover;">
+
+        <!-- Filter Bar -->
+        <div class="col-12">
+            <div class="filter-bar shadow-sm">
+                <div class="row g-2">
+                    <div class="col-md-1">
+                        <select class="form-select">
+                            <option>50</option>
+                            <option>100</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select">
+                            <option>Search By Name</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" placeholder="Enter Search Keyword">
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <select class="form-select">
+                            <option>By Faculty</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" placeholder="By Batch">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" placeholder="Search By Course">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" placeholder="Search By Sub Cour">
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select">
+                            <option>Year</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select">
+                            <option>By Seating</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <select class="form-select">
+                            <option>Search By Status</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select">
+                            <option>Search By Performance</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select">
+                            <option>Filter By Firm</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <span class="fw-bold">Found Results: <%= students.length %></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Area -->
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table admission-table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th>REF NO</th>
+                                    <th>STUDENT NAME<br>CONTACT NO.</th>
+                                    <th>COURSE<br>JOIN DATE</th>
+                                    <th>FEES</th>
+                                    <th>FACULTY<br>BATCH/PC NO</th>
+                                    <th>LAST PAID</th>
+                                    <th>ALLOWANCE<br>REFUND</th>
+                                    <th>PHOTO</th>
+                                    <th>STA.</th>
+                                    <th class="text-center">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if(students && students.length > 0) { %>
+                                    <% students.forEach((student, index) => { 
+                                        let totalPaid = 0; 
+                                        if(student.installments && student.installments.length > 0) {
+                                            student.installments.forEach(inst => totalPaid += inst.amount);
+                                        }
+                                        let lastInst = student.installments && student.installments.length > 0 ? student.installments[student.installments.length-1] : null;
+                                    %>
+                                        <tr>
+                                            <td class="text-center fw-bold text-muted"><%= students.length - index %></td>
+                                            <td class="fw-bold"><%= student.refNo || (student.createdAt ? student.createdAt.getFullYear() + 'NEW' : 'N/A') %></td>
+                                            <td>
+                                                <span class="main-text text-uppercase"><%= student.surname %> <%= student.studentName %></span>
+                                                <div class="mt-1">
+                                                    <a href="tel:<%= student.studentContact %>" class="contact-text"><i class="fas fa-phone-alt me-1"></i><%= student.studentContact %></a>
+                                                    <a href="tel:<%= student.parentsContact %>" class="contact-text"><i class="fas fa-user-friends me-1"></i><%= student.parentsContact %></a>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="main-text text-uppercase"><%= student.courseId ? student.courseId.courseName : 'N/A' %></span>
+                                                <span class="sub-text"><%= student.joiningDate ? new Date(student.joiningDate).toLocaleDateString('en-IN', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, '-') : 'N/A' %></span>
+                                            </td>
+                                            <td class="fw-bold text-nowrap"><%= student.totalFees %>/-</td>
+                                            <td>
+                                                <span class="main-text"><%= student.facultyId ? student.facultyId.name : 'N/A' %></span>
+                                                <span class="sub-text text-uppercase"><%= student.batchTime || 'N/A' %> / PC-<%= student.pcNo || '0' %></span>
+                                            </td>
+                                            <td>
+                                                <span class="main-text"><%= totalPaid %>/-</span>
+                                                <span class="sub-text"><%= lastInst ? new Date(lastInst.date).toLocaleDateString('en-IN', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, '-') : 'N/A' %></span>
+                                            </td>
+                                            <td>
+                                                <span class="sub-text">0/-</span>
+                                                <span class="sub-text">0/-</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <% if(student.image) { %>
+                                                    <img src="/uploads/<%= student.image %>" class="rounded border" style="width:40px; height:50px; object-fit:cover;">
                                                 <% } else { %>
-                                                    <div class="icon-circle bg-secondary text-white mx-auto d-flex align-items-center justify-content-center"
-                                                        style="width:40px; height:40px;">
-                                                        <i class="fas fa-user"></i>
-                                                    </div>
-                                                    <% } %>
-                                        </td>
-                                        <td><span class="fw-bold">
-                                                <%= student.studentName %>
-                                                    <%= student.surname %>
-                                            </span></td>
-                                        <td>
-                                            <%= student.studentContact %>
-                                        </td>
-                                        <td><span class="badge bg-info text-dark">
-                                                <%= student.courseId ? student.courseId.courseName : 'N/A' %>
-                                            </span></td>
-                                        <td>
-                                            <%= new Date(student.joiningDate).toLocaleDateString('en-IN') %>
-                                        </td>
-                                        <td>₹<%= student.totalFees.toLocaleString('en-IN') %>
-                                        </td>
-                                        <td class="text-success fw-bold">₹<%= totalPaid.toLocaleString('en-IN') %>
-                                        </td>
-                                        <td class="<%= remaining > 0 ? 'text-danger fw-bold' : 'text-success' %>">₹<%=
-                                                remaining.toLocaleString('en-IN') %>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="btn-group" role="group">
-                                                <!-- View / Edit / Delete buttons. View only for now to keep it simple or implement later -->
-                                                <button class="btn btn-sm btn-primary text-white me-1"
-                                                    title="View Details">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-info text-white me-1" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger text-white" title="Delete">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </div>
+                                                    <img src="https://ui-avatars.com/api/?name=<%= student.studentName %>&background=random" class="rounded border" style="width:40px; height:50px; object-fit:cover;">
+                                                <% } %>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="status-badge status-badge-regular">R</span>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <div class="action-btn-group mx-auto">
+                                                    <button class="btn btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></button>
+                                                    <button class="btn btn-outline-dark" title="Print Receipt"><i class="fas fa-print"></i></button>
+                                                    <button class="btn btn-outline-primary" title="History"><i class="fas fa-clock"></i></button>
+                                                    <button class="btn btn-outline-primary" title="View"><i class="fas fa-eye"></i></button>
+                                                    <a href="/fee/add/<%= student._id %>" class="btn btn-outline-primary" title="Add Fee"><i class="fas fa-plus"></i></a>
+                                                    <button class="btn btn-outline-primary" title="List"><i class="fas fa-list"></i></button>
+                                                    <button class="btn btn-outline-primary" title="PC Info"><i class="fas fa-desktop"></i></button>
+                                                    <button class="btn btn-outline-primary" title="More"><i class="fas fa-th"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="11" class="text-center py-5">
+                                            <h5 class="text-muted">No students found</h5>
+                                            <a href="/student/add" class="btn btn-primary mt-2">Add your first admission</a>
                                         </td>
                                     </tr>
-                                    <% }) %>
-                                        <% } else { %>
-                                            <tr>
-                                                <td colspan="9" class="text-center py-4">No students found. <a
-                                                        href="/student/add">Register a student.</a></td>
-                                            </tr>
-                                            <% } %>
-                    </tbody>
-                </table>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -107,4 +180,4 @@
         });
     </script>
 
-    <%- include('../layout/footer') %>
+<%- include('../layout/footer') %>

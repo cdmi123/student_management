@@ -40,6 +40,8 @@ app.use((req, res, next) => {
 app.use('/auth', require('./routes/authRoutes'));
 app.use('/student', require('./routes/studentRoutes'));
 app.use('/course', require('./routes/courseRoutes'));
+app.use('/faculty', require('./routes/facultyRoutes'));
+app.use('/fee', require('./routes/feeRoutes'));
 
 const dashboardController = require('./controllers/dashboardController');
 const { ensureAuthenticated } = require('./middleware/authMiddleware');

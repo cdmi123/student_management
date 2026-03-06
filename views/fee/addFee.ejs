@@ -1,0 +1,98 @@
+<%- include('../layout/header') %>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm rounded-lg border-0 overflow-hidden">
+            <div class="form-header-bar bg-gradient-primary">
+                <h5><i class="fas fa-money-check-alt me-2"></i>Fee Collection Form</h5>
+                <div class="badge bg-white text-primary fw-bold p-2 rounded-pill">
+                    Receipt: <%= receiptNo %>
+                </div>
+            </div>
+
+            <div class="card-body p-4 bg-light">
+                <form action="/fee/add" method="POST" class="row g-3">
+                    <input type="hidden" name="studentId" value="<%= student._id %>">
+                    <input type="hidden" name="registrationNo" value="<%= student.refNo %>">
+                    <input type="hidden" name="receiptNo" value="<%= receiptNo %>">
+
+                    <div class="col-md-4">
+                        <label class="form-label">Reference Number</label>
+                        <input type="text" class="form-control fw-bold bg-white" value="<%= student.refNo %>" readonly>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Receipt Number</label>
+                        <input type="text" class="form-control fw-bold bg-white" value="<%= receiptNo %>" readonly>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Current Date</label>
+                        <input type="date" class="form-control fw-bold bg-white" value="<%= currentDate %>" readonly>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Student Name</label>
+                        <input type="text" class="form-control bg-white" value="<%= (student.surname + ' ' + student.studentName).toUpperCase() %>" readonly>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Course</label>
+                        <input type="text" class="form-control bg-white" value="<%= student.courseId ? student.courseId.courseName : 'N/A' %>" readonly>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Fees Amount (Installment)*</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₹</span>
+                            <input type="number" name="amount" class="form-control fw-bold text-primary" placeholder="Enter Amount" value="<%= autoAmount %>" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Payment Mode*</label>
+                        <select name="paymentMode" class="form-select" required>
+                            <option value="Cash">Cash</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Cheque">Cheque</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Payment Details (Optional)</label>
+                        <input type="text" name="paymentDetails" class="form-control" placeholder="Transaction ID / Check No.">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Faculty Name*</label>
+                        <select name="facultyId" class="form-select" required>
+                            <option value="">Select Faculty</option>
+                            <% faculties.forEach(faculty => { %>
+                                <option value="<%= faculty._id %>" <%= student.facultyId && student.facultyId._id.toString() === faculty._id.toString() ? 'selected' : '' %>><%= faculty.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Created By*</label>
+                        <select name="createdBy" class="form-select" required>
+                            <option value="">Select Staff/Faculty</option>
+                            <% faculties.forEach(faculty => { %>
+                                <option value="<%= faculty._id %>"><%= faculty.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="col-12 mt-4 text-end">
+                        <a href="/student/list" class="btn btn-light border px-4 me-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary-theme px-5 shadow-sm">
+                            <i class="fas fa-save me-2"></i>Save Fee Payment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../layout/footer') %>

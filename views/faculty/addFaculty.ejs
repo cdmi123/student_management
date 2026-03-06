@@ -1,0 +1,80 @@
+<%- include('../layout/header') %>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="form-header-bar mt-3">
+                <h5 class="mb-0 text-white">
+                    <i class="fas fa-chalkboard-teacher me-2"></i>
+                    Add New Faculty
+                </h5>
+                <a href="/faculty/list" class="btn btn-sm btn-light text-primary fw-bold px-3">
+                    <i class="fas fa-list me-2"></i> Faculty List
+                </a>
+            </div>
+
+            <div class="form-content-area shadow-sm mb-5">
+                <% if (typeof error !== 'undefined' && error) { %>
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <%= error %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <% } %>
+
+                <% if (typeof success !== 'undefined' && success) { %>
+                    <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <%= success %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <% } %>
+
+                <form action="/faculty/add" method="POST">
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <label for="name" class="form-label">Faculty Name*</label>
+                            <input type="text" class="form-control" id="name" name="name" required
+                                placeholder="e.g. John Doe">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="email" class="form-label">Email Address*</label>
+                            <input type="email" class="form-control" id="email" name="email" required
+                                placeholder="e.g. john@example.com">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="password" class="form-label">Password*</label>
+                            <input type="password" class="form-control" id="password" name="password" required
+                                placeholder="Enter secure password">
+                        </div>
+                    </div>
+
+                    <div class="text-end border-top pt-4">
+                        <a href="/faculty/list" class="btn btn-outline-secondary px-4 me-2">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary-theme px-5">
+                            <i class="fas fa-save me-2"></i>
+                            Save Faculty
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Highlight sidebar active link
+        document.querySelectorAll('#sidebar ul li a').forEach(el => {
+            if (el.getAttribute('href') === '/faculty/add') {
+                el.closest('.nav-item').classList.add('active');
+                const collapse = el.closest('.collapse');
+                if (collapse) {
+                    collapse.classList.add('show');
+                    const toggle = document.querySelector(`[href="#${collapse.id}"]`);
+                    if (toggle) toggle.setAttribute('aria-expanded', 'true');
+                }
+            }
+        });
+    </script>
+
+<%- include('../layout/footer') %>

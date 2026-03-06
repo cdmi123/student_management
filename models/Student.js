@@ -43,12 +43,37 @@ const studentSchema = new mongoose.Schema({
     courseContent: { type: String },
     totalFees: { type: Number, required: true },
     joiningDate: { type: Date, required: true },
+    endingDate: { type: Date },
+
+    // Faculty Information
+    facultyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Faculty'
+    },
+    batchTime: { type: String },
+    pcNo: { type: String }, // PC Number
+    runningTopic: { type: String },
+    extraNote: { type: String },
+
+    // Admission Details
+    refNo: { type: String, unique: true },
+    status: { type: String, default: 'R' }, // R for Regular
 
     // Installment Details
     installments: [installmentSchema]
 
 }, {
     timestamps: true
+});
+
+// Pre-save hook to generate refNo
+studentSchema.pre('save', async function() {
+    if (!this.refNo) {
+        const date = new Date();
+        const year = date.getFullYear();
+        const count = await mongoose.model('Student').countDocuments();
+        this.refNo = `${year}${String(count + 1).padStart(4, '0')}`;
+    }
 });
 
 module.exports = mongoose.model('Student', studentSchema);

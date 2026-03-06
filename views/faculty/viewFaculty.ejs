@@ -1,0 +1,87 @@
+<%- include('../layout/header') %>
+
+    <div class="row">
+        <div class="col-12 px-0">
+            <div class="form-header-bar mt-2">
+                <h5 class="mb-0 text-white">
+                    <i class="fas fa-list me-2"></i> Faculty List
+                </h5>
+                <a href="/faculty/add" class="btn btn-sm btn-light text-primary fw-bold px-3">
+                    <i class="fas fa-plus me-2"></i> Add New Faculty
+                </a>
+            </div>
+
+            <div class="form-content-area shadow-sm mb-5">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="dataTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 50px;">#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Joined Date</th>
+                                <th class="text-center" style="width: 120px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(faculties && faculties.length > 0) { %>
+                                <% faculties.forEach((faculty, index) => { %>
+                                    <tr>
+                                        <td class="text-muted fw-bold">
+                                            <%= index + 1 %>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold text-primary"><%= faculty.name %></div>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted"><%= faculty.email %></span>
+                                        </td>
+                                        <td>
+                                            <%= new Date(faculty.createdAt).toLocaleDateString() %>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <button class="btn btn-sm btn-outline-primary" title="Edit disabled">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger" title="Delete disabled">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="5" class="text-center py-5">
+                                        <div class="text-muted mb-3">
+                                            <i class="fas fa-user-slash fa-3x"></i>
+                                        </div>
+                                        <h5 class="text-muted">No faculty members found</h5>
+                                        <a href="/faculty/add" class="btn btn-primary mt-2">Add your first faculty</a>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Highlight sidebar active link
+        document.querySelectorAll('#sidebar ul li a').forEach(el => {
+            if (el.getAttribute('href') === '/faculty/list') {
+                el.closest('.nav-item').classList.add('active');
+                const collapse = el.closest('.collapse');
+                if (collapse) {
+                    collapse.classList.add('show');
+                    const toggle = document.querySelector(`[href="#${collapse.id}"]`);
+                    if (toggle) toggle.setAttribute('aria-expanded', 'true');
+                }
+            }
+        });
+    </script>
+
+<%- include('../layout/footer') %>

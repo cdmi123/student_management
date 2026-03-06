@@ -138,6 +138,17 @@
                                 <input type="number" class="form-control bg-light" name="totalFees" id="totalFees" readonly required>
                             </div>
                             <div class="col-md-4">
+                                <label class="form-label">Joining Date*</label>
+                                <input type="date" class="form-control" name="joiningDate" id="joiningDate" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Ending Date (Auto)*</label>
+                                <input type="date" class="form-control bg-light" name="endingDate" id="endingDate" readonly required>
+                            </div>
+                            <div class="col-md-4">
                                 <label class="form-label">Daily Time</label>
                                 <select class="form-select" name="dailyTime">
                                     <option value="1H">1H</option>
@@ -212,17 +223,16 @@
                     <div class="tab-pane fade" id="faculty-info" role="tabpanel">
                         <h4 class="section-title">Faculty Information</h4>
                         <div class="row mb-4">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Select Faculty*</label>
-                                <select class="form-select" name="facultyName" required>
+                                <select class="form-select" name="facultyId" required>
                                     <option value="">Select Faculty</option>
-                                    <option value="Hitesh Sir">Hitesh Sir</option>
-                                    <option value="Mayur Sir">Mayur Sir</option>
-                                    <option value="Vivek Sir">Vivek Sir</option>
-                                    <option value="Rajesh Sir">Rajesh Sir</option>
+                                    <% faculties.forEach(faculty => { %>
+                                        <option value="<%= faculty._id %>"><%= faculty.name %></option>
+                                    <% }) %>
                                 </select>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Batch Time*</label>
                                 <select class="form-select" name="batchTime" required>
                                     <option value="">Select Batch Time</option>
@@ -234,13 +244,17 @@
                                     <option value="6 To 8">6 To 8</option>
                                 </select>
                             </div>
+                            <div class="col-md-4">
+                                <label class="form-label">PC No*</label>
+                                <input type="text" class="form-control" name="pcNo" placeholder="Enter PC No" required>
+                            </div>
                         </div>
                         <div class="row mb-4">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Running Topic*</label>
                                 <input type="text" class="form-control" name="runningTopic" placeholder="Enter Current Topic" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <label class="form-label">Extra Note</label>
                                 <textarea class="form-control" name="extraNote" placeholder="Any additional notes..." rows="1"></textarea>
                             </div>
@@ -358,10 +372,48 @@
                             document.getElementById('totalFees').value = data.fees || '';
                             document.getElementById('courseContent').value = data.content || '';
                             document.getElementById('targetFees').innerText = data.fees || '0';
+                            calculateEndingDate(); // Recalculate end date when course changes
                             validateInstallments();
                         })
                         .catch(err => console.error('Error fetching course:', err));
                 });
+
+                // 4.5 Auto Calculate Ending Date
+                function calculateEndingDate() {
+                    const joiningDateInput = document.getElementById('joiningDate').value;
+                    const durationText = document.getElementById('courseDuration').value;
+                    
+                    if (!joiningDateInput || !durationText) return;
+                    
+                    const durationMonths = parseInt(durationText);
+                    if (isNaN(durationMonths)) return;
+                    
+                    let startDate = new Date(joiningDateInput);
+                    // If joining date is Sat/Sun, push to Monday
+                    while (startDate.getDay() === 0 || startDate.getDay() === 6) {
+                        startDate.setDate(startDate.getDate() + 1);
+                    }
+                    
+                    // Logic: 1 month = 30 working days (as per typical institute requirements when skipping weekends)
+                    // Or 1 month = calendar month but extended by weekends? 
+                    // Let's use 30 as a multiplier for "units" to add.
+                    let totalWorkingDaysToAdd = durationMonths * 30; 
+                    
+                    let currentDate = new Date(startDate);
+                    let addedDays = 0;
+                    
+                    while (addedDays < totalWorkingDaysToAdd) {
+                        currentDate.setDate(currentDate.getDate() + 1);
+                        const day = currentDate.getDay();
+                        if (day !== 0 && day !== 6) { // Skip Sat (6) and Sun (0)
+                            addedDays++;
+                        }
+                    }
+                    
+                    document.getElementById('endingDate').value = currentDate.toISOString().split('T')[0];
+                }
+
+                document.getElementById('joiningDate').addEventListener('change', calculateEndingDate);
 
                 // 5. Dynamic Installments & Total Calculation
                 let installmentCount = 0;
@@ -413,8 +465,8 @@
 
                         row.innerHTML = `
                             <td class="installment-no">${count}</td>
-                            <td><input type="number" class="form-control form-control-sm inst-amount" name="installments[amount][]" value="${amount}" required min="1"></td>
-                            <td><input type="date" class="form-control form-control-sm disable-sunday" name="installments[date][]" value="${finalDateStr}" required></td>
+                            <td><input type="number" class="form-control form-control-sm inst-amount" name="instAmount[]" value="${amount}" required min="1"></td>
+                            <td><input type="date" class="form-control form-control-sm disable-sunday" name="instDate[]" value="${finalDateStr}" required></td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-outline-danger remove-installment">
                                     <i class="fas fa-times"></i>
@@ -444,8 +496,8 @@
 
                     tr.innerHTML = `
                         <td class="installment-no">${installmentCount}</td>
-                        <td><input type="number" class="form-control form-control-sm inst-amount" name="installments[amount][]" required min="1"></td>
-                        <td><input type="date" class="form-control form-control-sm disable-sunday" name="installments[date][]" value="${finalDateStr}" required></td>
+                        <td><input type="number" class="form-control form-control-sm inst-amount" name="instAmount[]" required min="1"></td>
+                        <td><input type="date" class="form-control form-control-sm disable-sunday" name="instDate[]" value="${finalDateStr}" required></td>
                         <td>
                             <button type="button" class="btn btn-sm btn-outline-danger remove-installment">
                                 <i class="fas fa-times"></i>

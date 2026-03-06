@@ -1,12 +1,14 @@
 const Student = require('../models/Student');
 const Course = require('../models/Course');
+const Faculty = require('../models/Faculty');
 const fs = require('fs');
 const path = require('path');
 
 exports.getAddStudent = async (req, res) => {
     try {
         const courses = await Course.find();
-        res.render('student/addStudent', { courses, currentPath: '/student/add' });
+        const faculties = await Faculty.find();
+        res.render('student/addStudent', { courses, faculties, currentPath: '/student/add' });
     } catch (err) {
         console.error(err);
         res.redirect('/');
@@ -18,20 +20,24 @@ exports.postAddStudent = async (req, res) => {
         const {
             surname, studentName, fatherName, studentContact, parentsContact,
             address, dob, qualification, referenceType, referenceName,
-            courseId, courseDuration, dailyTime, courseContent, totalFees, joiningDate
+            courseId, courseDuration, dailyTime, courseContent, totalFees, joiningDate, endingDate,
+            facultyId, batchTime, pcNo, runningTopic, extraNote
         } = req.body;
 
         // Parse installments from body
         let installments = [];
-        if (req.body['installments[amount][]']) {
-            const amounts = Array.isArray(req.body['installments[amount][]']) ? req.body['installments[amount][]'] : [req.body['installments[amount][]']];
-            const dates = Array.isArray(req.body['installments[date][]']) ? req.body['installments[date][]'] : [req.body['installments[date][]']];
+        const amounts = req.body['instAmount[]'];
+        const dates = req.body['instDate[]'];
 
-            for (let i = 0; i < amounts.length; i++) {
-                if (amounts[i] && dates[i]) {
+        if (amounts) {
+            const amountArr = Array.isArray(amounts) ? amounts : [amounts];
+            const dateArr = Array.isArray(dates) ? dates : [dates];
+
+            for (let i = 0; i < amountArr.length; i++) {
+                if (amountArr[i] && dateArr[i]) {
                     installments.push({
-                        amount: Number(amounts[i]),
-                        date: new Date(dates[i])
+                        amount: Number(amountArr[i]),
+                        date: new Date(dateArr[i])
                     });
                 }
             }
@@ -44,7 +50,8 @@ exports.postAddStudent = async (req, res) => {
             surname, studentName, fatherName, studentContact, parentsContact,
             address, dob, qualification, referenceType, referenceName,
             image: req.file ? req.file.filename : null,
-            courseId, courseDuration, dailyTime, courseContent, totalFees: Number(totalFees), joiningDate,
+            courseId, courseDuration, dailyTime, courseContent, totalFees: Number(totalFees), joiningDate, endingDate,
+            facultyId, batchTime, pcNo, runningTopic, extraNote,
             installments
         });
 
@@ -54,13 +61,14 @@ exports.postAddStudent = async (req, res) => {
     } catch (err) {
         console.error(err);
         const courses = await Course.find();
-        res.render('student/addStudent', { courses, error: 'Failed to add student. ' + err.message, currentPath: '/student/add' });
+        const faculties = await Faculty.find();
+        res.render('student/addStudent', { courses, faculties, error: 'Failed to add student. ' + err.message, currentPath: '/student/add' });
     }
 };
 
 exports.getStudentList = async (req, res) => {
     try {
-        const students = await Student.find().populate('courseId').sort({ createdAt: -1 });
+        const students = await Student.find().populate('courseId').populate('facultyId').sort({ createdAt: -1 });
         res.render('student/studentList', { students, currentPath: '/student/list' });
     } catch (err) {
         console.error(err);
