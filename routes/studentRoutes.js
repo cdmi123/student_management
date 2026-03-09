@@ -37,7 +37,13 @@ router.get('/add', studentController.getAddStudent);
 router.post('/add', upload.single('image'), studentController.postAddStudent);
 router.get('/list', studentController.getStudentList);
 router.get('/installments', studentController.getInstallmentReport);
+router.get('/view/:id', studentController.getStudentView);
+router.get('/due', studentController.getDueFees);
+router.get('/edit/:id', studentController.getEditStudent);
+router.post('/edit/:id', upload.single('image'), studentController.postEditStudent);
+router.post('/followup/:id', studentController.postAddFollowUp);
 
-// Additional routes for edit/delete can be added here if needed
+// Leave Management
+router.post('/leave/:id', studentController.postAddLeave);
 
 module.exports = router;

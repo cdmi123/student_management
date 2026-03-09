@@ -1,5 +1,17 @@
 <%- include('../layout/header') %>
 
+    <!-- DateRangePicker CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <style>
+        .daterangepicker {
+            font-family: 'Public Sans', sans-serif;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
     <div class="row mt-3">
         <div class="col-12 d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold mb-0">Admission List</h4>
@@ -26,7 +38,7 @@
                     <div class="col-md-8">
                         <input type="text" class="form-control" placeholder="Enter Search Keyword">
                     </div>
-                    
+
                     <div class="col-md-2">
                         <select class="form-select">
                             <option>By Faculty</option>
@@ -86,83 +98,121 @@
                                     <th>REF NO</th>
                                     <th>STUDENT NAME<br>CONTACT NO.</th>
                                     <th>COURSE<br>JOIN DATE</th>
-                                    <th>FEES</th>
                                     <th>FACULTY<br>BATCH/PC NO</th>
-                                    <th>LAST PAID</th>
-                                    <th>ALLOWANCE<br>REFUND</th>
                                     <th>PHOTO</th>
                                     <th>STA.</th>
                                     <th class="text-center">ACTION</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <% if(students && students.length > 0) { %>
-                                    <% students.forEach((student, index) => { 
-                                        let totalPaid = 0; 
+                                <% if(students && students.length> 0) { %>
+                                    <% students.forEach((student, index)=> {
+                                        let totalPaid = 0;
                                         if(student.installments && student.installments.length > 0) {
-                                            student.installments.forEach(inst => totalPaid += inst.amount);
+                                        student.installments.forEach(inst => totalPaid += inst.amount);
                                         }
-                                        let lastInst = student.installments && student.installments.length > 0 ? student.installments[student.installments.length-1] : null;
-                                    %>
+                                        let lastInst = student.installments && student.installments.length > 0 ?
+                                        student.installments[student.installments.length-1] : null;
+                                        %>
                                         <tr>
-                                            <td class="text-center fw-bold text-muted"><%= students.length - index %></td>
-                                            <td class="fw-bold"><%= student.refNo || (student.createdAt ? student.createdAt.getFullYear() + 'NEW' : 'N/A') %></td>
+                                            <td class="text-center fw-bold text-muted">
+                                                <%= students.length - index %>
+                                            </td>
+                                            <td class="fw-bold">
+                                                <%= student.refNo || (student.createdAt ?
+                                                    student.createdAt.getFullYear() + 'NEW' : 'N/A' ) %>
+                                            </td>
                                             <td>
-                                                <span class="main-text text-uppercase"><%= student.surname %> <%= student.studentName %></span>
+                                                <span class="main-text text-uppercase">
+                                                    <%= student.surname %>
+                                                        <%= student.studentName %>
+                                                </span>
                                                 <div class="mt-1">
-                                                    <a href="tel:<%= student.studentContact %>" class="contact-text"><i class="fas fa-phone-alt me-1"></i><%= student.studentContact %></a>
-                                                    <a href="tel:<%= student.parentsContact %>" class="contact-text"><i class="fas fa-user-friends me-1"></i><%= student.parentsContact %></a>
+                                                    <a href="tel:<%= student.studentContact %>" class="contact-text"><i
+                                                            class="fas fa-phone-alt me-1"></i>
+                                                        <%= student.studentContact %>
+                                                    </a>
+                                                    <a href="tel:<%= student.parentsContact %>" class="contact-text"><i
+                                                            class="fas fa-user-friends me-1"></i>
+                                                        <%= student.parentsContact %>
+                                                    </a>
                                                 </div>
                                             </td>
                                             <td>
-                                                <span class="main-text text-uppercase"><%= student.courseId ? student.courseId.courseName : 'N/A' %></span>
-                                                <span class="sub-text"><%= student.joiningDate ? new Date(student.joiningDate).toLocaleDateString('en-IN', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, '-') : 'N/A' %></span>
-                                            </td>
-                                            <td class="fw-bold text-nowrap"><%= student.totalFees %>/-</td>
-                                            <td>
-                                                <span class="main-text"><%= student.facultyId ? student.facultyId.name : 'N/A' %></span>
-                                                <span class="sub-text text-uppercase"><%= student.batchTime || 'N/A' %> / PC-<%= student.pcNo || '0' %></span>
-                                            </td>
-                                            <td>
-                                                <span class="main-text"><%= totalPaid %>/-</span>
-                                                <span class="sub-text"><%= lastInst ? new Date(lastInst.date).toLocaleDateString('en-IN', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, '-') : 'N/A' %></span>
+                                                <span class="main-text text-uppercase">
+                                                    <%= student.courseId ? student.courseId.courseName : 'N/A' %>
+                                                </span>
+                                                <span class="sub-text">
+                                                    <%= student.joiningDate ? new
+                                                        Date(student.joiningDate).toLocaleDateString('en-IN',
+                                                        {day:'2-digit', month:'2-digit',
+                                                        year:'numeric'}).replace(/\//g, '-' ) : 'N/A' %>
+                                                </span>
                                             </td>
                                             <td>
-                                                <span class="sub-text">0/-</span>
-                                                <span class="sub-text">0/-</span>
+                                                <span class="main-text">
+                                                    <%= student.facultyId ? student.facultyId.name : 'N/A' %>
+                                                </span>
+                                                <span class="sub-text text-uppercase">
+                                                    <%= student.batchTime || 'N/A' %> / PC-<%= student.pcNo || '0' %>
+                                                </span>
                                             </td>
                                             <td class="text-center">
                                                 <% if(student.image) { %>
-                                                    <img src="/uploads/<%= student.image %>" class="rounded border" style="width:40px; height:50px; object-fit:cover;">
-                                                <% } else { %>
-                                                    <img src="https://ui-avatars.com/api/?name=<%= student.studentName %>&background=random" class="rounded border" style="width:40px; height:50px; object-fit:cover;">
-                                                <% } %>
+                                                    <img src="/uploads/<%= student.image %>" class="rounded border"
+                                                        style="width:40px; height:50px; object-fit:cover;">
+                                                    <% } else { %>
+                                                        <img src="https://ui-avatars.com/api/?name=<%= student.studentName %>&background=random"
+                                                            class="rounded border"
+                                                            style="width:40px; height:50px; object-fit:cover;">
+                                                        <% } %>
                                             </td>
                                             <td class="text-center">
                                                 <span class="status-badge status-badge-regular">R</span>
                                             </td>
                                             <td class="text-center align-middle">
                                                 <div class="action-btn-group mx-auto">
-                                                    <button class="btn btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></button>
-                                                    <button class="btn btn-outline-dark" title="Print Receipt"><i class="fas fa-print"></i></button>
-                                                    <button class="btn btn-outline-primary" title="History"><i class="fas fa-clock"></i></button>
-                                                    <button class="btn btn-outline-primary" title="View"><i class="fas fa-eye"></i></button>
-                                                    <a href="/fee/add/<%= student._id %>" class="btn btn-outline-primary" title="Add Fee"><i class="fas fa-plus"></i></a>
-                                                    <button class="btn btn-outline-primary" title="List"><i class="fas fa-list"></i></button>
-                                                    <button class="btn btn-outline-primary" title="PC Info"><i class="fas fa-desktop"></i></button>
-                                                    <button class="btn btn-outline-primary" title="More"><i class="fas fa-th"></i></button>
+                                                    <a href="/student/edit/<%= student._id %>"
+                                                        class="btn btn-outline-primary" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="/fee/receipt/<%= student._id %>" target="_blank"
+                                                        class="btn btn-outline-dark" title="Print Receipt"><i
+                                                            class="fas fa-print"></i></a>
+                                                    <button type="button" class="btn btn-outline-primary"
+                                                        title="Manage Leave" data-bs-toggle="modal"
+                                                        data-bs-target="#leaveModal"
+                                                        data-student-id="<%= student._id %>"
+                                                        data-student-name="<%= student.studentName %>"
+                                                        data-faculty-id="<%= student.facultyId ? student.facultyId._id : '' %>"
+                                                        onclick="prepareLeaveModal(this)">
+                                                        <i class="fas fa-calendar-alt"></i>
+                                                    </button>
+                                                    <a href="/student/view/<%= student._id %>"
+                                                        class="btn btn-outline-primary" title="View"><i
+                                                            class="fas fa-eye"></i></a>
+                                                    <a href="/fee/add/<%= student._id %>"
+                                                        class="btn btn-outline-primary" title="Add Fee"><i
+                                                            class="fas fa-plus"></i></a>
+                                                    <button class="btn btn-outline-primary" title="List"><i
+                                                            class="fas fa-list"></i></button>
+                                                    <button class="btn btn-outline-primary" title="PC Info"><i
+                                                            class="fas fa-desktop"></i></button>
+                                                    <button class="btn btn-outline-primary" title="More"><i
+                                                            class="fas fa-th"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    <% }) %>
-                                <% } else { %>
-                                    <tr>
-                                        <td colspan="11" class="text-center py-5">
-                                            <h5 class="text-muted">No students found</h5>
-                                            <a href="/student/add" class="btn btn-primary mt-2">Add your first admission</a>
-                                        </td>
-                                    </tr>
-                                <% } %>
+                                        <% }) %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="8" class="text-center py-5">
+                                                        <h5 class="text-muted">No students found</h5>
+                                                        <a href="/student/add" class="btn btn-primary mt-2">Add your
+                                                            first admission</a>
+                                                    </td>
+                                                </tr>
+                                                <% } %>
                             </tbody>
                         </table>
                     </div>
@@ -171,13 +221,104 @@
         </div>
     </div>
 
-    <script>
-        // Highlight sidebar active link
-        document.querySelectorAll('#sidebar ul li a').forEach(el => {
-            if (el.getAttribute('href') === '/student/list') {
-                el.parentElement.classList.add('active');
-            }
-        });
-    </script>
+    <!-- Leave Modal -->
+    <div class="modal fade" id="leaveModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Record Leave: <span id="modalStudentName"
+                            class="text-primary"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="leaveForm" action="" method="POST">
+                    <div class="modal-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Select Leave
+                                    Dates</label>
+                                <div class="input-group">
+                                    <span class="input-group-text border-0 bg-light"><i
+                                            class="fas fa-calendar-alt text-muted"></i></span>
+                                    <input type="text" name="dateRange"
+                                        class="form-control border-0 bg-light shadow-none"
+                                        placeholder="Select start and end date" required readonly>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Assigned
+                                    Faculty</label>
+                                <select name="facultyId" id="modalFacultyId"
+                                    class="form-select border-0 bg-light shadow-none" required>
+                                    <option value="" selected disabled>Select Faculty</option>
+                                    <% faculties.forEach(faculty=> { %>
+                                        <option value="<%= faculty._id %>">
+                                            <%= faculty.name %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Reason / Note</label>
+                                <textarea name="note" class="form-control border-0 bg-light shadow-none" rows="3"
+                                    placeholder="Enter reason for leave..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4">Save Leave</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-<%- include('../layout/footer') %>
+    <%- include('../layout/footer') %>
+
+        <!-- DateRangePicker Dependencies -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+        <script>
+            function prepareLeaveModal(btn) {
+                const studentId = btn.getAttribute('data-student-id');
+                const studentName = btn.getAttribute('data-student-name');
+                const facultyId = btn.getAttribute('data-faculty-id');
+
+                document.getElementById('leaveForm').action = '/student/leave/' + studentId;
+                document.getElementById('modalStudentName').textContent = studentName;
+
+                const facultySelect = document.getElementById('modalFacultyId');
+                if (facultyId) {
+                    facultySelect.value = facultyId;
+                } else {
+                    facultySelect.value = "";
+                }
+            }
+
+            $(function () {
+                $('input[name="dateRange"]').daterangepicker({
+                    opens: 'left',
+                    autoUpdateInput: false,
+                    locale: { cancelLabel: 'Clear', format: 'DD/MM/YYYY' }
+                });
+
+                $('input[name="dateRange"]').on('apply.daterangepicker', function (ev, picker) {
+                    $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+                });
+
+                $('input[name="dateRange"]').on('cancel.daterangepicker', function (ev, picker) {
+                    $(this).val('');
+                });
+
+                // Highlight sidebar active link
+                document.querySelectorAll('#sidebar ul li a').forEach(el => {
+                    if (el.getAttribute('href') === '/student/list') {
+                        el.parentElement.classList.add('active');
+                    }
+                });
+            });
+        </script>

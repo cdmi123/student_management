@@ -1,0 +1,358 @@
+<%- include('../layout/header') %>
+
+    <style>
+        .due-card {
+            border: none;
+            border-radius: 8px;
+            transition: transform 0.2s;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .due-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .bg-pending {
+            background-color: #e35252;
+            color: white;
+        }
+
+        .bg-prev-due {
+            background-color: #ffb822;
+            color: black;
+        }
+
+        .bg-curr-due {
+            background-color: #00bcd4;
+            color: white;
+        }
+
+        .card-title-small {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .card-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .table-due thead th {
+            background-color: #fff;
+            color: #666;
+            font-weight: 600;
+            border-bottom: 2px solid #eee;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table-due .student-id {
+            color: #888;
+            font-size: 0.75rem;
+        }
+
+        .table-due .contact-info {
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .table-due .badge-course {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        .table-due .amount-red {
+            color: #dc3545;
+            font-weight: 700;
+        }
+
+        .table-due .amount-amber {
+            color: #ff9800;
+            font-weight: 700;
+        }
+
+        .table-due .amount-total {
+            color: #a52a2a;
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+
+        .btn-action-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .btn-pay {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-pay:hover {
+            background-color: #218838;
+            color: white;
+        }
+
+        .btn-followup {
+            background-color: transparent;
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+
+        .btn-followup:hover {
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+
+        .grand-total-row {
+            background-color: #fff;
+            font-weight: 800;
+            border-top: 3px solid #666;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+            }
+        }
+    </style>
+
+    <div class="row mt-3">
+        <div class="col-12 d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0">Due Fees Report</h4>
+            <button class="btn btn-outline-primary no-print" onclick="window.print()">
+                <i class="fas fa-print me-2"></i> Print Report
+            </button>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="col-md-4 mb-4">
+            <div class="card due-card bg-pending h-100">
+                <div class="card-body">
+                    <div class="card-title-small">TOTAL PENDING (ALL TIME)</div>
+                    <div class="card-amount">₹<%= grandTotalDue.toLocaleString('en-IN') %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card due-card bg-prev-due h-100">
+                <div class="card-body">
+                    <div class="card-title-small">PREVIOUS MONTHS DUE</div>
+                    <div class="card-amount">₹<%= grandPrevMonthDue.toLocaleString('en-IN') %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card due-card bg-curr-due h-100">
+                <div class="card-body">
+                    <div class="card-title-small">CURRENT MONTH DUE</div>
+                    <div class="card-amount">₹<%= grandCurrentMonthDue.toLocaleString('en-IN') %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Due List Table -->
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-due mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th style="text-align: left;">Student Name</th>
+                                    <th style="text-align: left;">Contact</th>
+                                    <th>Course</th>
+                                    <th>Faculty</th>
+                                    <th class="amount-red">PREV. MONTH DUE</th>
+                                    <th class="amount-amber">CURR. MONTH DUE</th>
+                                    <th class="amount-red">TOTAL DUE</th>
+                                    <th class="no-print">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if(dueStudents && dueStudents.length> 0) { %>
+                                    <% dueStudents.forEach((item, index)=> { %>
+                                        <tr>
+                                            <td class="text-center text-muted">
+                                                <%= index + 1 %>
+                                            </td>
+                                            <td>
+                                                <div class="fw-bold text-primary mb-0">
+                                                    <%= item.student.surname %>
+                                                        <%= item.student.studentName %>
+                                                </div>
+                                                <div class="student-id">ID: <%= item.student.refNo || 'N/A' %>
+                                                </div>
+                                                <% if(item.student.followUpNote) { %>
+                                                    <div class="mt-1 small text-danger fw-bold">
+                                                        <i class="fas fa-sticky-note me-1"></i> F/U: <%=
+                                                            item.student.followUpNote %>
+                                                    </div>
+                                                    <% } %>
+                                            </td>
+                                            <td>
+                                                <div class="contact-info">
+                                                    <i class="fas fa-phone-alt text-muted small me-1"></i>
+                                                    <%= item.student.studentContact %><br>
+                                                        <i class="fab fa-whatsapp text-muted small me-1"></i>
+                                                        <%= item.student.parentsContact || item.student.studentContact
+                                                            %>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge badge-course">
+                                                    <%= item.student.courseId ? item.student.courseId.courseName : 'N/A'
+                                                        %>
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="small fw-bold text-uppercase">
+                                                    <%= item.student.facultyId ? item.student.facultyId.name : 'N/A' %>
+                                                </div>
+                                            </td>
+                                            <td class="text-center amount-red">₹<%=
+                                                    item.prevMonthDue.toLocaleString('en-IN') %>
+                                            </td>
+                                            <td class="text-center amount-amber">₹<%=
+                                                    item.currentMonthDue.toLocaleString('en-IN') %>
+                                            </td>
+                                            <td class="text-center amount-total">₹<%=
+                                                    item.totalDue.toLocaleString('en-IN') %>
+                                            </td>
+                                            <td class="text-center no-print">
+                                                <div
+                                                    class="d-flex flex-row justify-content-center align-items-center gap-2">
+                                                    <a href="/fee/add/<%= item.student._id %>"
+                                                        class="btn-action-circle btn-pay" title="Collect Fee">
+                                                        <i class="fas fa-plus"></i>
+                                                    </a>
+                                                    <button type="button" class="btn-action-circle btn-followup"
+                                                        title="Add Follow-up Note" data-bs-toggle="modal"
+                                                        data-bs-target="#followUpModal"
+                                                        data-id="<%= item.student._id %>"
+                                                        data-name="<%= item.student.surname %> <%= item.student.studentName %>"
+                                                        data-date="<%= item.student.followUpDate ? item.student.followUpDate.toISOString().split('T')[0] : '' %>"
+                                                        data-note="<%= item.student.followUpNote || '' %>">
+                                                        <i class="fas fa-edit small"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="9" class="text-center py-5">
+                                                        <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                                                        <h5 class="text-muted">No pending fees at the moment!</h5>
+                                                    </td>
+                                                </tr>
+                                                <% } %>
+                            </tbody>
+                            <% if(dueStudents && dueStudents.length> 0) { %>
+                                <tfoot>
+                                    <tr class="grand-total-row">
+                                        <td colspan="5" class="text-end text-uppercase py-3">GRAND TOTAL:</td>
+                                        <td class="text-center amount-red">₹<%=
+                                                grandPrevMonthDue.toLocaleString('en-IN') %>
+                                        </td>
+                                        <td class="text-center amount-amber">₹<%=
+                                                grandCurrentMonthDue.toLocaleString('en-IN') %>
+                                        </td>
+                                        <td class="text-center amount-red" style="font-size: 1.3rem;">₹<%=
+                                                grandTotalDue.toLocaleString('en-IN') %>
+                                        </td>
+                                        <td class="no-print"></td>
+                                    </tr>
+                                </tfoot>
+                                <% } %>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Follow-up Modal -->
+    <div class="modal fade" id="followUpModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="followUpForm" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Follow-up for <span id="studentNameSpan" class="text-primary"></span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Next Follow-up Date*</label>
+                            <input type="date" class="form-control" name="followUpDate" required>
+                            <div class="form-text text-muted">Student will be hidden from this list until this date.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Follow-up Note*</label>
+                            <textarea class="form-control" name="followUpNote" rows="3"
+                                placeholder="Enter reason for delay or student's instruction..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary px-4">Save Note</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const followUpModal = document.getElementById('followUpModal');
+            if (followUpModal) {
+                followUpModal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    const studentId = button.getAttribute('data-id');
+                    const studentName = button.getAttribute('data-name');
+                    const studentDate = button.getAttribute('data-date');
+                    const studentNote = button.getAttribute('data-note');
+
+                    const form = followUpModal.querySelector('#followUpForm');
+                    const nameSpan = followUpModal.querySelector('#studentNameSpan');
+
+                    form.action = '/student/followup/' + studentId;
+                    nameSpan.textContent = studentName;
+
+                    followUpModal.querySelector('input[name="followUpDate"]').value = studentDate;
+                    followUpModal.querySelector('textarea[name="followUpNote"]').value = studentNote;
+
+                    // Set min date to today
+                    const today = new Date().toISOString().split('T')[0];
+                    followUpModal.querySelector('input[name="followUpDate"]').min = today;
+                });
+            }
+        });
+    </script>
+
+    <%- include('../layout/footer') %>

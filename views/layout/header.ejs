@@ -8,7 +8,8 @@
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
@@ -35,7 +36,7 @@
                         <li class="nav-item d-none d-md-flex align-items-center me-3">
                             <a class="nav-link px-2 text-primary fw-bold" href="#">Course Adm</a>
                             <a class="nav-link px-2" href="#">Notes</a>
-                            <a class="nav-link px-2" href="#">Due</a>
+                            <a class="nav-link px-2" href="/student/due">Due</a>
                             <a class="nav-link px-2" href="#">Upcoming</a>
                             <a class="nav-link px-2" href="#">Absent</a>
                             <a class="nav-link px-2" href="#">Change Password</a>
@@ -43,14 +44,14 @@
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="me-2 d-none d-lg-inline text-gray-600 small">
                                     <%= admin || 'Admin' %>
                                 </span>
                                 <img class="img-profile rounded-circle"
-                                    src="https://ui-avatars.com/api/?name=<%= admin || 'Admin' %>&background=0d6efd&color=fff" width="30"
-                                    height="30">
+                                    src="https://ui-avatars.com/api/?name=<%= admin || 'Admin' %>&background=0d6efd&color=fff"
+                                    width="30" height="30">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in"
@@ -72,4 +73,4 @@
                 <!-- End of Topbar -->
 
                 <!-- Main Content Container -->
-                <div class="container-fluid py-4">
+                <div class="container-fluid py-4">

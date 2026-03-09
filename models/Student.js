@@ -60,14 +60,18 @@ const studentSchema = new mongoose.Schema({
     status: { type: String, default: 'R' }, // R for Regular
 
     // Installment Details
-    installments: [installmentSchema]
+    installments: [installmentSchema],
+
+    // Follow-up Information
+    followUpDate: { type: Date },
+    followUpNote: { type: String }
 
 }, {
     timestamps: true
 });
 
 // Pre-save hook to generate refNo
-studentSchema.pre('save', async function() {
+studentSchema.pre('save', async function () {
     if (!this.refNo) {
         const date = new Date();
         const year = date.getFullYear();

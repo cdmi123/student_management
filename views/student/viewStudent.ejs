@@ -1,0 +1,1000 @@
+<%- include('../layout/header') %>
+
+    <!-- Google Fonts: Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- DateRangePicker CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <style>
+        :root {
+            --profile-primary: #4f46e5;
+            --profile-secondary: #6366f1;
+            --profile-success: #10b981;
+            --profile-danger: #ef4444;
+            --profile-warning: #f59e0b;
+            --profile-info: #0ea5e9;
+            --profile-bg: #f8fafc;
+            --profile-card: #ffffff;
+            --profile-text-main: #1e293b;
+            --profile-text-muted: #64748b;
+            --profile-border: #e2e8f0;
+            --profile-radius-lg: 20px;
+            --profile-radius-md: 12px;
+            --profile-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--profile-bg);
+            color: var(--profile-text-main);
+        }
+
+        .profile-container {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Top Bar */
+        .profile-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(to right, #4f46e5, #818cf8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .btn-back {
+            background: white;
+            border: 1px solid var(--profile-border);
+            border-radius: var(--profile-radius-md);
+            padding: 0.6rem 1.25rem;
+            font-weight: 600;
+            color: var(--profile-text-main);
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background: #f1f5f9;
+            transform: translateX(-3px);
+        }
+
+        /* Sidebar Area */
+        .profile-sidebar {
+            background: var(--profile-card);
+            border-radius: var(--profile-radius-lg);
+            padding: 2.5rem 1.5rem;
+            box-shadow: var(--profile-shadow);
+            text-align: center;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .student-avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 0 4px #eef2ff;
+        }
+
+        .badge-ref {
+            display: inline-block;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .student-name {
+            font-weight: 800;
+            font-size: 1.5rem;
+            margin-bottom: 0.15rem;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            color: var(--profile-text-main);
+        }
+
+        .father-name {
+            color: var(--profile-text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            text-transform: capitalize;
+            font-weight: 500;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 0.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.2s;
+            border-radius: 8px;
+        }
+
+        .info-item:hover {
+            background: #f8fafc;
+            transform: translateX(5px);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            color: #64748b;
+            border-radius: 8px;
+            margin-right: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: var(--profile-text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.025em;
+            line-height: 1;
+        }
+
+        .info-value {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--profile-text-main);
+        }
+
+        /* Main Content Area */
+        .detail-card {
+            background: var(--profile-card);
+            border-radius: var(--profile-radius-lg);
+            padding: 2rem;
+            box-shadow: var(--profile-shadow);
+            border: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-title-premium {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-title-premium i {
+            color: var(--profile-primary);
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+
+        .data-point-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--profile-text-muted);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .data-point-value {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .status-regular {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        /* Financial Summary */
+        .financial-hero {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .finance-stats-card {
+            padding: 1.5rem;
+            border-radius: var(--profile-radius-lg);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .finance-stats-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        .finance-stats-card::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .card-fees {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        }
+
+        .card-paid {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .card-due {
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+        }
+
+        .finance-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .finance-amount {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        /* Tabs UI */
+        .nav-tabs-premium {
+            border-bottom: none;
+            background: #f1f5f9;
+            padding: 0.4rem;
+            border-radius: 14px;
+            display: inline-flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-tabs-premium .nav-link {
+            border: none !important;
+            padding: 0.6rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 600;
+            color: var(--profile-text-muted);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-tabs-premium .nav-link i {
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+
+        .nav-tabs-premium .nav-link:hover i {
+            opacity: 1;
+        }
+
+        .nav-tabs-premium .nav-link.active {
+            background: white !important;
+            color: var(--profile-primary) !important;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-tabs-premium .nav-link.active i {
+            opacity: 1;
+            color: var(--profile-primary);
+        }
+
+        .nav-tabs-premium .nav-link.active::after {
+            display: none;
+        }
+
+        /* Table Customization */
+        .table-premium {
+            border-radius: var(--profile-radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--profile-border);
+        }
+
+        .table-premium thead th {
+            background: #f8fafc;
+            padding: 1rem 1.25rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--profile-text-muted);
+            font-weight: 700;
+            border-bottom: 1px solid var(--profile-border);
+        }
+
+        .table-premium tbody td {
+            padding: 1.25rem;
+            vertical-align: middle;
+            font-weight: 500;
+        }
+
+        .amount-badge {
+            font-family: monospace;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .receipt-id {
+            background: #f1f5f9;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            transition: all 0.2s;
+            border: 1px solid var(--profile-border);
+            color: var(--profile-text-muted);
+        }
+
+        .action-btn:hover {
+            background: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+
+        /* Premium DateRangePicker Overrides */
+        .daterangepicker {
+            font-family: 'Outfit', sans-serif;
+            border: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            padding: 10px;
+        }
+
+        .daterangepicker .calendar-table {
+            border: none;
+            background: transparent;
+        }
+
+        .daterangepicker td.active,
+        .daterangepicker td.active:hover {
+            background-color: var(--profile-primary);
+            border-color: transparent;
+            color: #fff;
+            border-radius: 8px;
+        }
+
+        .daterangepicker td.in-range {
+            background-color: #eef2ff;
+            color: var(--profile-primary);
+        }
+
+        .daterangepicker .drp-buttons {
+            border-top: 1px solid #f1f5f9;
+            padding: 1rem;
+        }
+
+        .daterangepicker .drp-buttons .btn {
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 0.5rem 1.25rem;
+            font-size: 0.85rem;
+        }
+
+        .daterangepicker .btn-primary {
+            background-color: var(--profile-primary);
+            border-color: var(--profile-primary);
+        }
+
+        .daterangepicker td.available:hover,
+        .daterangepicker th.available:hover {
+            background-color: #f8fafc;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 992px) {
+            .financial-hero {
+                grid-template-columns: 1fr;
+            }
+
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <div class="profile-container py-4 px-4">
+        <!-- Top Bar -->
+        <div class="profile-top-bar">
+            <div>
+                <h1 class="profile-title">Student Profile</h1>
+                <p class="text-muted small mb-0">Academic & Financial Overview</p>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm" data-bs-toggle="modal"
+                    data-bs-target="#leaveModal">
+                    <i class="fas fa-calendar-plus me-2"></i> Manage Leave
+                </button>
+                <a href="/student/list" class="btn btn-back">
+                    <i class="fas fa-chevron-left me-2"></i> Back to Database
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Sidebar: Personal Profile -->
+            <div class="col-lg-4">
+                <div class="profile-sidebar">
+                    <div class="avatar-wrapper">
+                        <% if(student.image) { %>
+                            <img src="/uploads/<%= student.image %>" class="student-avatar" alt="Student Photo">
+                            <% } else { %>
+                                <img src="https://ui-avatars.com/api/?name=<%= student.studentName %>&background=4f46e5&color=fff&size=200"
+                                    class="student-avatar" alt="Student Photo">
+                                <% } %>
+                    </div>
+
+                    <div class="text-center">
+                        <span class="badge-ref">REF: <%= student.refNo || (student.createdAt ?
+                                student.createdAt.getFullYear() + 'NEW' : 'N/A' ) %></span>
+                        <h2 class="student-name">
+                            <%= student.surname %>
+                                <%= student.studentName %>
+                        </h2>
+                        <p class="father-name fw-medium">
+                            <%= student.fatherName %>
+                        </p>
+                    </div>
+
+                    <div class="info-list mt-4">
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-phone"></i></div>
+                            <div>
+                                <div class="info-label">Student Contact</div>
+                                <div class="info-value">
+                                    <%= student.studentContact %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-users"></i></div>
+                            <div>
+                                <div class="info-label">Parents Contact</div>
+                                <div class="info-value">
+                                    <%= student.parentsContact || 'N/A' %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-birthday-cake"></i></div>
+                            <div>
+                                <div class="info-label">Date of Birth</div>
+                                <div class="info-value">
+                                    <%= student.dob ? new Date(student.dob).toLocaleDateString('en-GB') : 'N/A' %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-graduation-cap"></i></div>
+                            <div>
+                                <div class="info-label">Qualification</div>
+                                <div class="info-value">
+                                    <%= student.qualification || 'N/A' %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div>
+                                <div class="info-label">Current Address</div>
+                                <div class="info-value text-muted" style="font-size: 0.85rem;">
+                                    <%= student.address || 'N/A' %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <!-- Financial Hero Banner -->
+                <% let totalPaid=0; fees.forEach(fee=> totalPaid += fee.amount);
+                    let totalPlanned = 0;
+                    if(student.installments && student.installments.length > 0) {
+                    student.installments.forEach(inst => totalPlanned += inst.amount);
+                    }
+                    let remaining = student.totalFees - totalPaid;
+                    %>
+                    <div class="financial-hero">
+                        <div class="finance-stats-card card-fees">
+                            <div class="finance-label">Total Course Fees</div>
+                            <div class="finance-amount">₹<%= student.totalFees.toLocaleString('en-IN') %>
+                            </div>
+                        </div>
+                        <div class="finance-stats-card card-paid">
+                            <div class="finance-label">Amount Collected</div>
+                            <div class="finance-amount">₹<%= totalPaid.toLocaleString('en-IN') %>
+                            </div>
+                        </div>
+                        <div class="finance-stats-card card-due">
+                            <div class="finance-label">Remaining Balance</div>
+                            <div class="finance-amount">₹<%= (remaining> 0 ? remaining : 0).toLocaleString('en-IN') %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detail Cards -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <div class="detail-card">
+                                <h3 class="card-title-premium"><i class="fas fa-book-open"></i> Academic Details</h3>
+                                <div class="data-grid">
+                                    <div>
+                                        <div class="data-point-label">Course Type</div>
+                                        <div class="data-point-value text-uppercase text-primary">
+                                            <%= student.courseId ? student.courseId.courseName : 'N/A' %>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="data-point-label">Duration</div>
+                                        <div class="data-point-value">
+                                            <%= student.courseDuration || 'N/A' %> Months
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="data-point-label">Batch Timing</div>
+                                        <div class="data-point-value">
+                                            <%= student.dailyTime || 'N/A' %>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="data-point-label">Status</div>
+                                        <div class="data-point-value">
+                                            <span class="status-badge status-regular">
+                                                <%= student.status==='R' ? 'Regular' : student.status %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="data-point-value">
+                                            <%= student.joiningDate ? new
+                                                Date(student.joiningDate).toLocaleDateString('en-GB') : 'N/A' %>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="data-point-label">Completion date</div>
+                                        <div class="data-point-value">
+                                            <%= student.endingDate ? new
+                                                Date(student.endingDate).toLocaleDateString('en-GB') : 'N/A' %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail-card">
+                                <h3 class="card-title-premium"><i class="fas fa-chalkboard-teacher"></i> Faculty & Batch
+                                </h3>
+                                <div class="data-grid">
+                                    <div>
+                                        <div class="data-point-label">Assigned Faculty</div>
+                                        <div class="data-point-value text-primary">
+                                            <%= student.facultyId ? student.facultyId.name : 'N/A' %>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="data-point-label">Workstation No</div>
+                                        <div class="data-point-value">PC #<%= student.pcNo || 'N/A' %>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="data-point-label">Current Progress</div>
+                                        <div class="data-point-value text-success">
+                                            <%= student.runningTopic || 'None Started' %>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="data-point-label">Daily Shift</div>
+                                        <div class="data-point-value">
+                                            <%= student.batchTime || 'N/A' %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 pt-3 border-top">
+                                    <div class="data-point-label">Lead Reference</div>
+                                    <div class="data-point-value text-muted">
+                                        <%= student.referenceType %> (<%= student.referenceName || 'Direct' %>)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes Section -->
+                    <% if(student.extraNote) { %>
+                        <div class="detail-card mb-4" style="background: #fffbeb; border: 1px dashed #fbbf24;">
+                            <div class="d-flex gap-3">
+                                <i class="fas fa-sticky-note text-warning fs-4 mt-1"></i>
+                                <div>
+                                    <div class="data-point-label text-warning">Special Instructions / Notes</div>
+                                    <div class="fw-medium text-dark-emphasis small">
+                                        <%= student.extraNote %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+
+                            <!-- Finance Tabs Section -->
+                            <div class="detail-card">
+                                <h3 class="card-title-premium mb-4"><i class="fas fa-file-invoice-dollar"></i> Finance &
+                                    Activity</h3>
+                                <nav>
+                                    <div class="nav nav-tabs nav-tabs-premium" id="nav-tab" role="tablist">
+                                        <button class="nav-link active" id="nav-receipts-tab" data-bs-toggle="tab"
+                                            data-bs-target="#nav-receipts" type="button" role="tab">
+                                            <i class="fas fa-history me-2"></i>Payment History
+                                        </button>
+                                        <button class="nav-link" id="nav-installments-tab" data-bs-toggle="tab"
+                                            data-bs-target="#nav-installments" type="button" role="tab">
+                                            <i class="fas fa-calendar-alt me-2"></i>Installment Plan
+                                        </button>
+                                        <button class="nav-link" id="nav-leaves-tab" data-bs-toggle="tab"
+                                            data-bs-target="#nav-leaves" type="button" role="tab">
+                                            <i class="fas fa-calendar-check me-2"></i>Leave History
+                                        </button>
+                                    </div>
+                                </nav>
+                                <div class="tab-content" id="nav-tabContent">
+                                    <!-- History Tab -->
+                                    <div class="tab-pane fade show active" id="nav-receipts" role="tabpanel">
+                                        <div class="table-responsive">
+                                            <table class="table table-premium align-middle">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Receipt</th>
+                                                        <th>Mode</th>
+                                                        <th class="text-end">Amount</th>
+                                                        <th class="text-center">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if(fees && fees.length> 0) { %>
+                                                        <% fees.forEach((fee)=> { %>
+                                                            <tr>
+                                                                <td>
+                                                                    <%= new
+                                                                        Date(fee.createdAt).toLocaleDateString('en-GB')
+                                                                        %>
+                                                                </td>
+                                                                <td><span class="receipt-id">
+                                                                        <%= fee.receiptNo %>
+                                                                    </span></td>
+                                                                <td>
+                                                                    <span class="badge bg-light text-dark border">
+                                                                        <%= fee.paymentMode %>
+                                                                    </span>
+                                                                </td>
+                                                                <td class="text-end">
+                                                                    <span class="amount-badge text-success">₹<%=
+                                                                            fee.amount.toLocaleString('en-IN') %></span>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <a href="/fee/receipt/<%= fee._id %>"
+                                                                        target="_blank" class="btn action-btn mx-auto"
+                                                                        title="Print Receipt">
+                                                                        <i class="fas fa-print"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <% }) %>
+                                                                <% } else { %>
+                                                                    <tr>
+                                                                        <td colspan="5" class="text-center py-5">
+                                                                            <div class="opacity-25 mb-3"><i
+                                                                                    class="fas fa-receipt fa-3x"></i>
+                                                                            </div>
+                                                                            <p class="text-muted mb-3">No payments
+                                                                                recorded yet</p>
+                                                                            <a href="/fee/add/<%= student._id %>"
+                                                                                class="btn btn-primary rounded-pill px-4">
+                                                                                Collect First Payment
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <!-- Installments Tab -->
+                                    <div class="tab-pane fade" id="nav-installments" role="tabpanel">
+                                        <div class="table-responsive">
+                                            <table class="table table-premium align-middle">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Due Date</th>
+                                                        <th>Amount</th>
+                                                        <th class="text-end">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if(student.installments && student.installments.length> 0) { %>
+                                                        <% let accumPaid=totalPaid; student.installments.forEach((inst,
+                                                            index)=> {
+                                                            let statusHtml = '';
+                                                            if (accumPaid >= inst.amount) {
+                                                            accumPaid -= inst.amount;
+                                                            statusHtml = `<span
+                                                                class="badge bg-success-subtle text-success px-3 py-2 rounded-pill"><i
+                                                                    class="fas fa-check me-1"></i> Paid</span>`;
+                                                            } else if (accumPaid > 0) {
+                                                            statusHtml = `<span
+                                                                class="badge bg-warning-subtle text-warning px-3 py-2 rounded-pill"><i
+                                                                    class="fas fa-clock me-1"></i> Partial
+                                                                (₹${accumPaid})</span>`;
+                                                            accumPaid = 0;
+                                                            } else {
+                                                            let dt = new Date(inst.date);
+                                                            let now = new Date();
+                                                            if(dt < now) {
+                                                                statusHtml='<span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill"><i class="fas fa-exclamation-triangle me-1"></i> Overdue</span>'
+                                                                ; } else {
+                                                                statusHtml='<span class="badge bg-secondary-subtle text-secondary px-3 py-2 rounded-pill"><i class="fas fa-hourglass-start me-1"></i> Upcoming</span>'
+                                                                ; } } %>
+                                                                <tr>
+                                                                    <td class="text-muted">#<%= index + 1 %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= new
+                                                                            Date(inst.date).toLocaleDateString('en-GB')
+                                                                            %>
+                                                                    </td>
+                                                                    <td>₹<%= inst.amount.toLocaleString('en-IN') %>
+                                                                    </td>
+                                                                    <td class="text-end"><%- statusHtml %></td>
+                                                                </tr>
+                                                                <% }) %>
+                                                                    <tr class="bg-light">
+                                                                        <td colspan="2" class="text-end fw-bold">Plan
+                                                                            Integrity:</td>
+                                                                        <td colspan="2">
+                                                                            <% if(totalPlanned !==student.totalFees) {
+                                                                                %>
+                                                                                <span
+                                                                                    class="text-danger small fw-bold"><i
+                                                                                        class="fas fa-times-circle me-1"></i>
+                                                                                    Mismatch (Diff: ₹<%=
+                                                                                        Math.abs(totalPlanned -
+                                                                                        student.totalFees) %>)</span>
+                                                                                <% } else { %>
+                                                                                    <span
+                                                                                        class="text-success small fw-bold"><i
+                                                                                            class="fas fa-check-circle me-1"></i>
+                                                                                        100% Balanced</span>
+                                                                                    <% } %>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% } else { %>
+                                                                        <tr>
+                                                                            <td colspan="4"
+                                                                                class="text-center py-5 text-muted">
+                                                                                Initialize installment plan in edit mode
+                                                                            </td>
+                                                                        </tr>
+                                                                        <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Leave Tab -->
+                                <div class="tab-pane fade" id="nav-leaves" role="tabpanel">
+                                    <div class="table-responsive">
+                                        <table class="table table-premium align-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th>Start Date</th>
+                                                    <th>End Date</th>
+                                                    <th>Days</th>
+                                                    <th>Faculty</th>
+                                                    <th>Note</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% if(leaves && leaves.length> 0) { %>
+                                                    <% leaves.forEach((leave)=> {
+                                                        const start = new Date(leave.startDate);
+                                                        const end = new Date(leave.endDate);
+                                                        const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) +
+                                                        1;
+                                                        %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= start.toLocaleDateString('en-GB') %>
+                                                            </td>
+                                                            <td>
+                                                                <%= end.toLocaleDateString('en-GB') %>
+                                                            </td>
+                                                            <td><span
+                                                                    class="badge bg-info-subtle text-info px-2 py-1 rounded-pill">
+                                                                    <%= days %> Days
+                                                                </span></td>
+                                                            <td>
+                                                                <%= leave.facultyId ? leave.facultyId.name : 'N/A' %>
+                                                            </td>
+                                                            <td class="text-muted small">
+                                                                <%= leave.note || '-' %>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                            <% } else { %>
+                                                                <tr>
+                                                                    <td colspan="5" class="text-center py-5 text-muted">
+                                                                        <div class="opacity-25 mb-3"><i
+                                                                                class="fas fa-calendar-times fa-3x"></i>
+                                                                        </div>
+                                                                        No leave records found for this student.
+                                                                    </td>
+                                                                </tr>
+                                                                <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Leave Modal -->
+    <div class="modal fade" id="leaveModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Record Student Leave</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/student/leave/<%= student._id %>" method="POST">
+                    <div class="modal-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Select Leave
+                                    Dates</label>
+                                <div class="input-group">
+                                    <span class="input-group-text border-0 bg-light"><i
+                                            class="fas fa-calendar-alt text-muted"></i></span>
+                                    <input type="text" name="dateRange"
+                                        class="form-control border-0 bg-light shadow-none"
+                                        placeholder="Select start and end date" required readonly>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Assigned
+                                    Faculty</label>
+                                <select name="facultyId" class="form-select border-0 bg-light shadow-none" required>
+                                    <option value="" selected disabled>Select Faculty</option>
+                                    <% faculties.forEach(faculty=> { %>
+                                        <option value="<%= faculty._id %>" <%=(student.facultyId &&
+                                            student.facultyId._id.toString()===faculty._id.toString()) ? 'selected' : ''
+                                            %>><%= faculty.name %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted text-uppercase">Reason / Note</label>
+                                <textarea name="note" class="form-control border-0 bg-light shadow-none" rows="3"
+                                    placeholder="Enter reason for leave..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4">Save Leave Record</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- DateRangePicker Dependencies -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <script>
+        $(function () {
+            $('input[name="dateRange"]').daterangepicker({
+                opens: 'left',
+                autoUpdateInput: false,
+                locale: {
+                    cancelLabel: 'Clear',
+                    format: 'DD/MM/YYYY'
+                }
+            });
+
+            $('input[name="dateRange"]').on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+            });
+
+            $('input[name="dateRange"]').on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+            });
+        });
+    </script>
+    <%- include('../layout/footer') %>

@@ -1,0 +1,634 @@
+<%- include('../layout/header') %>
+
+    <div class="form-header-bar mt-2">
+        <h5>Edit Student Registration</h5>
+        <a href="/student/list" class="btn btn-sm btn-light"><i class="fas fa-list me-2"></i>Admission List</a>
+    </div>
+
+    <div class="tab-container">
+        <ul class="nav nav-tabs nav-tabs-custom" id="formTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="student-tab" data-bs-toggle="tab" data-bs-target="#student-info"
+                    type="button" role="tab">Student Information</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="course-tab" data-bs-toggle="tab" data-bs-target="#course-info"
+                    type="button" role="tab">Course Information</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="faculty-tab" data-bs-toggle="tab" data-bs-target="#faculty-info"
+                    type="button" role="tab">Faculty Information</button>
+            </li>
+        </ul>
+    </div>
+
+    <% if (typeof error !=='undefined' ) { %>
+        <div class="alert alert-danger mt-3">
+            <%= error %>
+        </div>
+        <% } %>
+
+            <form action="/student/edit/<%= student._id %>" method="POST" enctype="multipart/form-data" id="studentForm"
+                class="form-content-area shadow-sm mb-5">
+                <div class="tab-content" id="formTabsContent">
+                    <!-- Student Information Tab -->
+                    <div class="tab-pane fade show active" id="student-info" role="tabpanel">
+                        <h4 class="section-title">Personal Information</h4>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Registration No / Ref No</label>
+                                <input type="text" class="form-control bg-light" name="registrationNo"
+                                    value="<%= student.registrationNo || student.refNo || '' %>" readonly>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Surname*</label>
+                                <input type="text" class="form-control" name="surname" value="<%= student.surname %>"
+                                    required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Student Name*</label>
+                                <input type="text" class="form-control" name="studentName"
+                                    value="<%= student.studentName %>" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Father Name*</label>
+                                <input type="text" class="form-control" name="fatherName"
+                                    value="<%= student.fatherName %>" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Student Contact No*</label>
+                                <input type="text" class="form-control" name="studentContact"
+                                    value="<%= student.studentContact %>" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Parents Contact No*</label>
+                                <input type="text" class="form-control" name="parentsContact"
+                                    value="<%= student.parentsContact %>" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Date of Birth (DOB)*</label>
+                                <% let dobString='' ; if (student.dob) {
+                                    dobString=student.dob.toISOString().split('T')[0]; } %>
+                                    <input type="date" class="form-control" name="dob" value="<%= dobString %>"
+                                        required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <label class="form-label">Address*</label>
+                            <textarea class="form-control" name="address" rows="2"
+                                required><%= student.address %></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Qualification*</label>
+                            <input type="text" class="form-control" name="qualification"
+                                value="<%= student.qualification %>" required>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Student Reference*</label>
+                                <select class="form-select" name="referenceType" required>
+                                    <option value="">Select Reference</option>
+                                    <option value="Others" <%=student.referenceType==='Others' ? 'selected' : '' %>
+                                        >Others</option>
+                                    <option value="Internet" <%=student.referenceType==='Internet' ? 'selected' : '' %>
+                                        >Internet</option>
+                                    <option value="Student" <%=student.referenceType==='Student' ? 'selected' : '' %>
+                                        >Student</option>
+                                    <option value="Staff" <%=student.referenceType==='Staff' ? 'selected' : '' %>>Staff
+                                    </option>
+                                    <option value="Seminar" <%=student.referenceType==='Seminar' ? 'selected' : '' %>
+                                        >Seminar</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Reference Name*</label>
+                                <input type="text" class="form-control" name="referenceName"
+                                    value="<%= student.referenceName || '' %>">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Update Student Image</label>
+                                <div class="image-upload-box">
+                                    <input type="text" class="form-control bg-light" placeholder="Choose new file"
+                                        readonly>
+                                    <button type="button" class="btn btn-upload px-3">Browse</button>
+                                    <input type="file" class="d-none" name="image" id="imageInput" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div id="imagePreviewContainer" class="mb-2">
+                                    <% if (student.image) { %>
+                                        <img id="imagePreview" src="/uploads/<%= student.image %>" alt="Current Photo"
+                                            class="img-thumbnail" style="max-height: 100px;">
+                                        <small class="text-muted d-block mt-1">Current Image. Upload a new one above to
+                                            replace.</small>
+                                        <% } else { %>
+                                            <img id="imagePreview" src="" alt="Preview" class="img-thumbnail d-none"
+                                                style="max-height: 100px;">
+                                            <% } %>
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-end">
+                                <button type="button" class="btn btn-primary px-4 next-tab" data-next="course-info">
+                                    Next: Course Info <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Course Information Tab -->
+                    <div class="tab-pane fade" id="course-info" role="tabpanel">
+                        <h4 class="section-title">Course Information</h4>
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <label class="form-label">Course Selection*</label>
+                                <select class="form-select" name="courseId" id="courseSelect" required>
+                                    <option value="">Select a course...</option>
+                                    <% courses.forEach(course=> { %>
+                                        <option value="<%= course._id %>" <%=(student.courseId &&
+                                            student.courseId._id.toString()===course._id.toString()) ? 'selected' : ''
+                                            %>>
+                                            <%= course.courseName %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Course Duration</label>
+                                <input type="text" class="form-control bg-light" name="courseDuration"
+                                    id="courseDuration" value="<%= student.courseDuration %>" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Total Fees (₹)*</label>
+                                <input type="number" class="form-control bg-light" name="totalFees" id="totalFees"
+                                    value="<%= student.totalFees %>" readonly required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Joining Date*</label>
+                                <% let joinString='' ; if (student.joiningDate) {
+                                    joinString=student.joiningDate.toISOString().split('T')[0]; } %>
+                                    <input type="date" class="form-control" name="joiningDate" id="joiningDate"
+                                        value="<%= joinString %>" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Ending Date (Auto)*</label>
+                                <% let endString='' ; if (student.endingDate) {
+                                    endString=student.endingDate.toISOString().split('T')[0]; } %>
+                                    <input type="date" class="form-control bg-light" name="endingDate" id="endingDate"
+                                        value="<%= endString %>" readonly required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Daily Time</label>
+                                <select class="form-select" name="dailyTime">
+                                    <option value="1H" <%=student.dailyTime==='1H' ? 'selected' : '' %>>1H</option>
+                                    <option value="2H" <%=student.dailyTime==='2H' ? 'selected' : '' %>>2H</option>
+                                    <option value="3H" <%=student.dailyTime==='3H' ? 'selected' : '' %>>3H</option>
+                                    <option value="4H" <%=student.dailyTime==='4H' ? 'selected' : '' %>>4H</option>
+                                    <option value="6H" <%=student.dailyTime==='6H' ? 'selected' : '' %>>6H</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Course Content</label>
+                            <textarea class="form-control bg-light" name="courseContent" id="courseContent" rows="3"
+                                readonly><%= student.courseId ? student.courseId.content : '' %></textarea>
+                        </div>
+
+                        <hr>
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="mb-0">Installment Details</h5>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="input-group input-group-sm" style="width: 250px;">
+                                    <span class="input-group-text bg-light text-muted">Installment Amount</span>
+                                    <input type="number" class="form-control" id="standardInstallment" placeholder="₹">
+                                    <button type="button" class="btn btn-primary" id="autoGenerateBtn">
+                                        <i class="fas fa-magic"></i> Regenerate
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="installmentTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 80px;">No.</th>
+                                        <th>Amount (₹)</th>
+                                        <th>Date</th>
+                                        <th style="width: 80px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="installmentBody">
+                                    <% if(student.installments && student.installments.length> 0) { %>
+                                        <% let accumPaid=typeof totalPaid !=='undefined' ? totalPaid : 0;
+                                            student.installments.forEach((inst, index)=> {
+                                            const instDateStr = new Date(inst.date).toISOString().split('T')[0];
+                                            const isPaid = accumPaid >= inst.amount;
+                                            if (isPaid) accumPaid -= inst.amount;
+                                            else accumPaid = 0;
+                                            %>
+                                            <tr class="<%= isPaid ? 'table-success' : '' %>">
+                                                <td class="installment-no">
+                                                    <%= index + 1 %>
+                                                        <% if (isPaid) { %>
+                                                            <i class="fas fa-check-circle text-success ms-1"
+                                                                title="Paid"></i>
+                                                            <% } %>
+                                                </td>
+                                                <td>
+                                                    <input type="number"
+                                                        class="form-control form-control-sm inst-amount <%= isPaid ? 'bg-light' : '' %>"
+                                                        name="instAmount[]" value="<%= inst.amount %>" required min="1"
+                                                        <%=isPaid ? 'readonly' : '' %>>
+                                                </td>
+                                                <td><input type="date"
+                                                        class="form-control form-control-sm disable-sunday <%= isPaid ? 'bg-light' : '' %>"
+                                                        name="instDate[]" value="<%= instDateStr %>" required <%=isPaid
+                                                        ? 'readonly' : '' %>></td>
+                                                <td>
+                                                    <% if (!isPaid) { %>
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-outline-danger remove-installment">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                        <% } else { %>
+                                                            <span class="badge bg-success">Paid</span>
+                                                            <% } %>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                                <% } %>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th class="text-end">Total:</th>
+                                        <th><span id="installmentTotal">0</span></th>
+                                        <th colspan="2">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small id="installmentWarning" class="text-danger d-none fw-bold">
+                                                    <i class="fas fa-exclamation-triangle"></i> Total doesn't match
+                                                    Course Fees!
+                                                </small>
+                                                <button type="button" class="btn btn-sm btn-outline-success ms-auto"
+                                                    id="addInstallmentBtn">
+                                                    <i class="fas fa-plus me-1"></i> Add Manually
+                                                </button>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-12 text-end">
+                                <button type="button" class="btn btn-primary px-4 next-tab" data-next="faculty-tab">
+                                    Next: Faculty Info <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Faculty Information Tab -->
+                    <div class="tab-pane fade" id="faculty-info" role="tabpanel">
+                        <h4 class="section-title">Faculty Information</h4>
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Select Faculty*</label>
+                                <select class="form-select" name="facultyId" required>
+                                    <option value="">Select Faculty</option>
+                                    <% faculties.forEach(faculty=> { %>
+                                        <option value="<%= faculty._id %>" <%=(student.facultyId &&
+                                            student.facultyId._id.toString()===faculty._id.toString()) ? 'selected' : ''
+                                            %>>
+                                            <%= faculty.name %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Batch Time*</label>
+                                <select class="form-select" name="batchTime" required>
+                                    <option value="">Select Batch Time</option>
+                                    <option value="8 To 10" <%=student.batchTime==='8 To 10' ? 'selected' : '' %>>8 To
+                                        10</option>
+                                    <option value="10 To 12" <%=student.batchTime==='10 To 12' ? 'selected' : '' %>>10
+                                        To 12</option>
+                                    <option value="12 To 2" <%=student.batchTime==='12 To 2' ? 'selected' : '' %>>12 To
+                                        2</option>
+                                    <option value="2 To 4" <%=student.batchTime==='2 To 4' ? 'selected' : '' %>>2 To 4
+                                    </option>
+                                    <option value="4 To 6" <%=student.batchTime==='4 To 6' ? 'selected' : '' %>>4 To 6
+                                    </option>
+                                    <option value="6 To 8" <%=student.batchTime==='6 To 8' ? 'selected' : '' %>>6 To 8
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">PC No*</label>
+                                <input type="text" class="form-control" name="pcNo" placeholder="Enter PC No"
+                                    value="<%= student.pcNo %>" required>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Running Topic*</label>
+                                <input type="text" class="form-control" name="runningTopic"
+                                    placeholder="Enter Current Topic" value="<%= student.runningTopic || '' %>"
+                                    required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" name="status">
+                                    <option value="R" <%=student.status==='R' ? 'selected' : '' %>>Running (R)</option>
+                                    <option value="D" <%=student.status==='D' ? 'selected' : '' %>>Dropped (D)</option>
+                                    <option value="C" <%=student.status==='C' ? 'selected' : '' %>>Completed (C)
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Extra Note</label>
+                                <textarea class="form-control" name="extraNote" placeholder="Any additional notes..."
+                                    rows="1"><%= student.extraNote %></textarea>
+                            </div>
+                        </div>
+
+                        <div class="text-end border-top pt-4">
+                            <button type="submit" class="btn btn-primary-theme px-5" id="submitBtn">
+                                <i class="fas fa-save me-2"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <script>
+                // Define script functionalities identically to addStudent, but calculateTotal immediately
+                document.querySelector('.btn-upload').addEventListener('click', function () {
+                    document.getElementById('imageInput').click();
+                });
+
+                const uploadBox = document.querySelector('.image-upload-box');
+                const imageInput = document.getElementById('imageInput');
+                const fileNameInput = uploadBox.querySelector('.form-control');
+                const previewContainer = document.getElementById('imagePreviewContainer');
+                const previewImage = document.getElementById('imagePreview');
+
+                function handleFiles(files) {
+                    const file = files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        fileNameInput.value = file.name;
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(file);
+                        imageInput.files = dataTransfer.files;
+
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            previewImage.src = e.target.result;
+                            previewImage.classList.remove('d-none');
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                }
+
+                imageInput.addEventListener('change', function (e) { handleFiles(this.files); });
+
+                function applySundayBlocker() {
+                    const dateInputs = document.querySelectorAll('input[type="date"].disable-sunday');
+                    dateInputs.forEach(input => {
+                        input.addEventListener('input', function (e) {
+                            const day = new Date(this.value).getUTCDay();
+                            if ([0].includes(day)) {
+                                e.preventDefault();
+                                this.value = '';
+                                alert('Sundays are not selectable!');
+                            }
+                        });
+                    });
+                }
+                applySundayBlocker();
+
+                document.getElementById('courseSelect').addEventListener('change', function () {
+                    const courseId = this.value;
+                    if (!courseId) return;
+
+                    fetch(`/course/api/${courseId}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            document.getElementById('courseDuration').value = data.duration || '';
+                            document.getElementById('totalFees').value = data.fees || '';
+                            document.getElementById('courseContent').value = data.content || '';
+                            calculateEndingDate();
+                            validateInstallments();
+                        })
+                        .catch(err => console.error('Error fetching course:', err));
+                });
+
+                function calculateEndingDate() {
+                    const joiningDateInput = document.getElementById('joiningDate').value;
+                    const durationText = document.getElementById('courseDuration').value;
+                    if (!joiningDateInput || !durationText) return;
+
+                    const durationMonths = parseInt(durationText);
+                    if (isNaN(durationMonths)) return;
+
+                    let startDate = new Date(joiningDateInput);
+                    while (startDate.getDay() === 0 || startDate.getDay() === 6) {
+                        startDate.setDate(startDate.getDate() + 1);
+                    }
+
+                    let totalWorkingDaysToAdd = durationMonths * 30;
+                    let currentDate = new Date(startDate);
+                    let addedDays = 0;
+
+                    while (addedDays < totalWorkingDaysToAdd) {
+                        currentDate.setDate(currentDate.getDate() + 1);
+                        const day = currentDate.getDay();
+                        if (day !== 0 && day !== 6) addedDays++;
+                    }
+                    document.getElementById('endingDate').value = currentDate.toISOString().split('T')[0];
+                }
+                document.getElementById('joiningDate').addEventListener('change', calculateEndingDate);
+
+                let installmentCount = document.querySelectorAll('.installment-no').length;
+
+                function skipSunday(date) {
+                    const newDate = new Date(date);
+                    if (newDate.getDay() === 0) {
+                        newDate.setDate(newDate.getDate() + 1);
+                    }
+                    return newDate.toISOString().split('T')[0];
+                }
+
+                document.getElementById('autoGenerateBtn').addEventListener('click', function () {
+                    const totalFees = parseFloat(document.getElementById('totalFees').value) || 0;
+                    let instAmount = parseFloat(document.getElementById('standardInstallment').value) || 0;
+
+                    if (totalFees <= 0 || instAmount <= 0) {
+                        alert('Please enter a valid installment amount.');
+                        return;
+                    }
+
+                    const tbody = document.getElementById('installmentBody');
+                    const rows = Array.from(tbody.querySelectorAll('tr'));
+
+                    // Identify paid installments to keep
+                    const paidRows = rows.filter(row => row.querySelector('input[readonly]'));
+
+                    tbody.innerHTML = '';
+                    let paidSum = 0;
+                    let lastDate = new Date();
+
+                    paidRows.forEach((row, index) => {
+                        tbody.appendChild(row);
+                        paidSum += parseFloat(row.querySelector('.inst-amount').value);
+                        lastDate = new Date(row.querySelector('input[type="date"]').value);
+                    });
+
+                    let remaining = totalFees - paidSum;
+                    let count = paidRows.length;
+                    let currentDate = new Date(lastDate);
+
+                    if (remaining < 0) {
+                        alert('Error: Paid amount exceeds total fees.');
+                        return;
+                    }
+
+                    while (remaining > 0) {
+                        count++;
+                        const amount = Math.min(remaining, instAmount);
+                        const row = document.createElement('tr');
+                        currentDate.setMonth(currentDate.getMonth() + 1);
+                        const finalDateStr = skipSunday(currentDate);
+
+                        row.innerHTML = `
+                <td class="installment-no">${count}</td>
+                <td><input type="number" class="form-control form-control-sm inst-amount" name="instAmount[]" value="${amount}" required min="1"></td>
+                <td><input type="date" class="form-control form-control-sm disable-sunday" name="instDate[]" value="${finalDateStr}" required></td>
+                <td><button type="button" class="btn btn-sm btn-outline-danger remove-installment"><i class="fas fa-times"></i></button></td>
+            `;
+                        tbody.appendChild(row);
+                        remaining -= amount;
+                    }
+                    installmentCount = count;
+                    calculateTotal();
+                    applySundayBlocker();
+                    updateInstallmentNumbers();
+                });
+
+                document.getElementById('addInstallmentBtn').addEventListener('click', function () {
+                    installmentCount++;
+                    const tbody = document.getElementById('installmentBody');
+                    const tr = document.createElement('tr');
+                    const lastDateInput = tbody.querySelector('tr:last-child input[type="date"]');
+                    let nextDate = new Date();
+                    if (lastDateInput && lastDateInput.value) {
+                        nextDate = new Date(lastDateInput.value);
+                        nextDate.setMonth(nextDate.getMonth() + 1);
+                    }
+                    const finalDateStr = skipSunday(nextDate);
+
+                    tr.innerHTML = `
+            <td class="installment-no">${installmentCount}</td>
+            <td><input type="number" class="form-control form-control-sm inst-amount" name="instAmount[]" required min="1"></td>
+            <td><input type="date" class="form-control form-control-sm disable-sunday" name="instDate[]" value="${finalDateStr}" required></td>
+            <td><button type="button" class="btn btn-sm btn-outline-danger remove-installment"><i class="fas fa-times"></i></button></td>
+        `;
+                    tbody.appendChild(tr);
+                    applySundayBlocker();
+                    updateInstallmentNumbers();
+                    calculateTotal();
+                });
+
+                document.getElementById('installmentBody').addEventListener('click', function (e) {
+                    if (e.target.closest('.remove-installment')) {
+                        e.target.closest('tr').remove();
+                        updateInstallmentNumbers();
+                        calculateTotal();
+                    }
+                });
+
+                document.getElementById('installmentBody').addEventListener('input', function (e) {
+                    if (e.target.classList.contains('inst-amount')) {
+                        calculateTotal();
+                    }
+                });
+
+                function updateInstallmentNumbers() {
+                    const rows = document.querySelectorAll('#installmentBody tr');
+                    installmentCount = rows.length;
+                    rows.forEach((row, index) => {
+                        row.querySelector('.installment-no').innerText = index + 1;
+                    });
+                }
+
+                function calculateTotal() {
+                    let total = 0;
+                    document.querySelectorAll('.inst-amount').forEach(input => {
+                        const val = parseFloat(input.value);
+                        if (!isNaN(val)) total += val;
+                    });
+                    document.getElementById('installmentTotal').innerText = total;
+                    validateInstallments();
+                }
+
+                function validateInstallments() {
+                    const totalFees = parseFloat(document.getElementById('totalFees').value) || 0;
+                    const currentTotal = parseFloat(document.getElementById('installmentTotal').innerText) || 0;
+                    const warning = document.getElementById('installmentWarning');
+                    const submitBtn = document.getElementById('submitBtn');
+
+                    if (installmentCount > 0) {
+                        if (Math.abs(currentTotal - totalFees) > 0.01) {
+                            warning.classList.remove('d-none');
+                            submitBtn.disabled = true;
+                        } else {
+                            warning.classList.add('d-none');
+                            submitBtn.disabled = false;
+                        }
+                    } else {
+                        warning.classList.add('d-none');
+                        submitBtn.disabled = false;
+                    }
+                }
+
+                document.querySelectorAll('.next-tab').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const nextTabId = this.getAttribute('data-next');
+                        const nextTabEl = document.querySelector('[href="#' + nextTabId + '"]');
+                        if (nextTabEl) {
+                            const tab = new bootstrap.Tab(nextTabEl);
+                            tab.show();
+                            window.scrollTo(0, 0);
+                        }
+                    });
+                });
+
+                // Pre-fill standard installment if data exists
+                const firstInst = document.querySelector('.inst-amount');
+                if (firstInst) {
+                    document.getElementById('standardInstallment').value = firstInst.value;
+                }
+
+                // Run on load
+                calculateTotal();
+            </script>
+
+            <%- include('../layout/footer') %>
